@@ -1,0 +1,50 @@
+{
+	"geode": "4.4.0",
+	"gd": {
+		"win": "2.2074",
+		"android": "2.2074",
+		"mac": "2.2074",
+		"ios": "2.2074"
+	},
+	"id": "geming400.genColorTriggers",
+	"name": "Gen color triggers",
+	"version": "v1.0.0",
+	"developer": "Geming400",
+	"description": "",
+	"settings": {
+		"general-title": {
+			"name": "General",
+			"type": "title"
+		},
+		"include-builtin-color-channels": {
+			"name": "Include built-in color channels",
+			"type": "bool",
+			"default": false,
+			"description": "Will the color channels for the BG, G, MG, etc... will be included in the generated triggers as well"
+		},
+
+		"offsets-title": {
+			"name": "Offsets",
+			"type": "title"
+		},
+		"use-gd-grid-space": {
+			"name": "Use GD grid space",
+			"type": "bool",
+			"default": true,
+			"description": "If enabled, it will center the given coordinate on the grid. If disabled: 1 grid unit = 30 X/Y"
+		},
+		"offset-x": {
+			"name": "X",
+			"type": "float",
+			"default": 0
+		},
+		"offset-y": {
+			"name": "Y",
+			"type": "float",
+			"default": 1
+		}
+	},
+	"dependencies": {
+		"geode.custom-keybinds": ">=v1.1.0"
+	}
+}
