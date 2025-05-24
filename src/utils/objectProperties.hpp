@@ -1,0 +1,19 @@
+enum ColorString {
+    FROM_RED = 1,
+    FROM_GREEN,
+    FROM_BLUE,
+    PLAYER_COLOR,
+    BLENDING,
+    COLOR_CHANNEL,
+    FROM_OPACITY,
+    TOGGLE_OPACITY,
+    INHERITED_COLOR_CHANNEL,
+    HSV,
+    TO_RED,
+    TO_GREEN,
+    TO_BLUE,
+    DELTA_TIME,
+    TO_OPACITY,
+    DURATION,
+    COPY_OPACITY
+};
