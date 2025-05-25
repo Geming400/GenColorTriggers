@@ -6,7 +6,7 @@
 		"mac": "2.2074",
 		"ios": "2.2074"
 	},
-	"id": "geming400.genColorTriggers",
+	"id": "geming400.gen-color-triggers",
 	"name": "Gen color triggers",
 	"version": "v1.0.0",
 	"developer": "Geming400",
@@ -41,7 +41,7 @@
 		"offset-y": {
 			"name": "Y",
 			"type": "float",
-			"default": 1
+			"default": 2
 		}
 	},
 	"dependencies": {
