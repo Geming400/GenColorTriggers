@@ -83,6 +83,7 @@ ccHSVValue modUtils::colorChannelsParser::rawHSVtoHSVValue(std::string& rawHSVSt
 // This function looks ugly but whatever
 std::optional<modUtils::ColorTriggerContent> modUtils::colorChannelsParser::rawColorToColorTrigger(std::string& rawColorString) {
     ColorAction* colorAction = ColorAction::create();
+    colorAction->retain();
     int targetChannelID;
 
     ColorTriggerContent colorTriggerContent;
@@ -224,4 +225,6 @@ void modUtils::colorChannelsParser::colorTriggerContentToColorTrigger(EffectGame
     } else {
         label->setString(channelIDstring.c_str());
     }
+
+    colorAction->release(); // We don't need it anymore
 }
