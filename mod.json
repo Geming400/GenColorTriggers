@@ -12,6 +12,11 @@
 	"links": {
 		"source": "https://github.com/Geming400/GenColorTriggers"
 	},
+	"resources": {
+		"sprites": [
+			"./resources/genColorTriggers.png"
+		]
+	},
 	"settings": {
 		"general-title": {
 			"name": "General",
@@ -22,6 +27,13 @@
 			"type": "bool",
 			"default": false,
 			"description": "Will the color channels for the BG, G, MG, etc... will be included in the generated triggers as well"
+		},
+		"show-editor-button": {
+			"name": "Show editor button",
+			"type": "bool",
+			"default": false,
+			"platforms": ["desktop"],
+			"description": "Used to make a button appear in the 'edit' tab of the editor. This is enabled by default on mobile"
 		},
 		"show-parsing-notif": {
 			"name": "Show 'parsing level' notification",
