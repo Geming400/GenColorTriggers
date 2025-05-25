@@ -7,3 +7,9 @@ using namespace geode::prelude;
         Mod::get()->setSavedValue<bool>("show-editor-button", true);
     }
 #endif
+
+#ifdef GEODE_IS_DESKTOP
+    $on_mod(Loaded) {
+        Mod::get()->setSavedValue<bool>("show-editor-button", false);
+    }
+#endif
