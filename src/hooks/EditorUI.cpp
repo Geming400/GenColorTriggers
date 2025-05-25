@@ -16,10 +16,8 @@ class $modify(MyEditorUI, EditorUI) {
 
 	void onGenerateColorTriggers(CCObject*) {
 		if (!m_fields->m_levelEditorLayer) {
-			const std::string message = "The editor layer wasn't found ??";
-
-			log::error(message);
-			Notification::create(message, NotificationIcon::Error)->show();
+			log::error("The editor layer wasn't found ??");
+			Notification::create("The editor layer wasn't found ??", NotificationIcon::Error)->show();
 
 			return;
 		}
