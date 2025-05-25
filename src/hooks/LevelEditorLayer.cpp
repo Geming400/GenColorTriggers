@@ -70,7 +70,7 @@ int MyLevelEditorLayer::genColorTriggers(GameObject* center, CCPoint offset) {
 	
 	for (const auto &colorTriggerContent : colorChannels.value()) {
 		if (Mod::get()->getSettingValue<bool>("include-builtin-color-channels")) {
-			if (!modUtils::isInVector(allowedCustomColors, colorTriggerContent.targetChannelID) && colorTriggerContent.targetChannelID >= 1000) { log::info("colorTriggerContent.targetChannelID = {}", colorTriggerContent.targetChannelID); continue; }
+			if (!modUtils::isInVector(allowedCustomColors, colorTriggerContent.targetChannelID) && colorTriggerContent.targetChannelID >= 1000) { continue; }
 		} else {
 			if (colorTriggerContent.targetChannelID >= 1000) { continue; }
 		}
