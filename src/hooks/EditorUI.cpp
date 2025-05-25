@@ -1,11 +1,15 @@
 #include <Geode/Geode.hpp>
-#include <geode.custom-keybinds/include/Keybinds.hpp>
+
 
 #include "LevelEditorLayer.hpp"
 #include "../utils/utils.hpp"
 
 using namespace geode::prelude;
-using namespace keybinds;
+
+#ifdef GEODE_IS_DESKTOP
+	#include <geode.custom-keybinds/include/Keybinds.hpp>
+	using namespace keybinds;
+#endif
 
 #include <Geode/modify/EditorUI.hpp>
 class $modify(MyEditorUI, EditorUI) {
@@ -76,16 +80,20 @@ class $modify(MyEditorUI, EditorUI) {
             alert->show();
 	    }
 
-		this->template addEventListener<InvokeBindFilter>([=](InvokeBindEvent* event) {
-			if (event->isDown()) {
-				onGenerateColorTriggers(nullptr);
-			}
-			// Return Propagate if you want other actions with the same bind to
-			// also be fired, or Stop if you want to halt propagation
-			return ListenerResult::Propagate;
-		}, "genColorTriggers"_spr);
+		#ifdef GEODE_IS_DESKTOP
+			this->template addEventListener<InvokeBindFilter>([=](InvokeBindEvent* event) {
+				if (event->isDown()) {
+					onGenerateColorTriggers(nullptr);
+				}
+				// Return Propagate if you want other actions with the same bind to
+				// also be fired, or Stop if you want to halt propagation
+				return ListenerResult::Propagate;
+			}, "genColorTriggers"_spr);
 
-		log::info("Registered keybind 'genColorTriggers' !");
+			log::info("Registered keybind 'genColorTriggers' !");
+		#else
+			log::info("User is on mobile, cannot register a keybind.");
+		#endif
 
 		return true;
 	}
