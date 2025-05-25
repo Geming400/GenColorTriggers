@@ -11,6 +11,9 @@
 	"version": "v1.0.0",
 	"developer": "Geming400",
 	"description": "",
+	"links": {
+		"source": "https://github.com/Geming400/GenColorTriggers"
+	},
 	"settings": {
 		"general-title": {
 			"name": "General",
