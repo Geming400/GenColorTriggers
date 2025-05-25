@@ -15,11 +15,14 @@ class $modify(MyEditorUI, EditorUI) {
 
 	bool init(LevelEditorLayer* editorLayer) {
 		if (!EditorUI::init(editorLayer)) return false;
-		
+
         if (!Mod::get()->getSavedValue<bool>("first-time-loading", false)) { // if their are going into the editor for the first time after installing this then show a popup
             Mod::get()->setSavedValue<bool>("first-time-loading", true);
-            FLAlertLayer::create("Hello!", "To generate color triggers please press 'F10' !", "Ok!")->show();
-        }
+
+            auto alert = FLAlertLayer::create("Hello!", "To generate color triggers please press 'F10' !", "Ok!");
+            alert->m_scene = this;
+            alert->show();
+	    }
 
 		this->template addEventListener<InvokeBindFilter>([=](InvokeBindEvent* event) {
 			if (event->isDown()) {

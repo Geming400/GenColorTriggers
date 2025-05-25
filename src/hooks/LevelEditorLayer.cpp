@@ -33,7 +33,6 @@ bool isColorSet(const ccColor3B& color) {
 #define GET_COLOR_ACTION_DICT(levelSettings) levelSettings->m_effectManager->m_colorActionDict
 #define CCDICT_TO_CCDICTEXT(key, value, CCDict) 
 
-
 int MyLevelEditorLayer::genColorTriggers(GameObject* center, CCPoint offset) {	
 	CCArrayExt<EffectGameObject> objects;
 
