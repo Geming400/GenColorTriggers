@@ -72,8 +72,8 @@ class $modify(MyEditorUI, EditorUI) {
 
 		m_fields->m_levelEditorLayer = editorLayer;
 
-        if (!Mod::get()->getSavedValue<bool>("first-time-loading", false)) { // if their are going into the editor for the first time after installing this then show a popup
-            Mod::get()->setSavedValue<bool>("first-time-loading", true);
+        if (Mod::get()->getSavedValue<bool>("first-time-loading", true)) { // if their are going into the editor for the first time after installing this then show a popup
+            Mod::get()->setSavedValue<bool>("first-time-loading", false);
 
             auto alert = FLAlertLayer::create("Hello!", "To generate color triggers please press 'F10' !", "Ok!");
             alert->m_scene = this;
