@@ -15,9 +15,11 @@
 		"source": "https://github.com/Geming400/GenColorTriggers"
 	},
 	"resources": {
-		"sprites": [
-			"./resources/genColorTriggers.png"
-		]
+		"spritesheets": {
+			"genColorTriggers-button": [
+				"./resources/genColorTriggers.png"
+			]
+		}
 	},
 	"settings": {
 		"general-title": {
