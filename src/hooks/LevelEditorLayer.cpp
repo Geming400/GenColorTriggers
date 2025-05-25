@@ -108,11 +108,18 @@ class $modify(MyLevelEditorLayer, LevelEditorLayer) {
 
 #include <Geode/modify/EditorUI.hpp>
 class $modify(MyEditorUI, EditorUI) {
+	struct Fields {
+		Notification* m_parsingNotification;
+	};
+
 	bool init(LevelEditorLayer* editorLayer) {
 		if (!EditorUI::init(editorLayer)) return false;
 		
 		this->template addEventListener<InvokeBindFilter>([=](InvokeBindEvent* event) {
 			if (event->isDown()) {
+				m_fields->m_parsingNotification = Notification::create("Parsing level...", NotificationIcon::Loading, 5);
+				m_fields->m_parsingNotification->show();
+
 				auto selectedObjects = CCArrayExt<GameObject>(getSelectedObjects());
 
 				if (selectedObjects.size() == 1) {
@@ -132,12 +139,14 @@ class $modify(MyEditorUI, EditorUI) {
 					offset.y += offset_y;
 
 					int colorTriggersNum = static_cast<MyLevelEditorLayer*>(editorLayer)->genColorTriggers(selectedObjects[0], offset);
+					m_fields->m_parsingNotification->hide();
 					if (colorTriggersNum == 0) {
 						Notification::create("Created 0 color triggers.", NotificationIcon::Warning)->show();
 					} else {
 						Notification::create(fmt::format("Sucessfully generated {} color triggers!", colorTriggersNum), NotificationIcon::Success)->show();
 					}
 				} else {
+					m_fields->m_parsingNotification->hide();
 					if (selectedObjects.size() == 0) {
 						Notification::create("You must select at least 1 object!", NotificationIcon::Error)->show();
 					} else {
