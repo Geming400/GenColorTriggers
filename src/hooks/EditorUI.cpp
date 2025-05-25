@@ -40,14 +40,14 @@ class $modify(MyEditorUI, EditorUI) {
 					offset.y += offset_y;
 
 					int colorTriggersNum = static_cast<MyLevelEditorLayer*>(editorLayer)->genColorTriggers(selectedObjects[0], offset);
-					m_fields->m_parsingNotification->hide();
+                    m_fields->m_parsingNotification->setOpacity(0); // instantly hide the notification
 					if (colorTriggersNum == 0) {
 						Notification::create("Created 0 color triggers.", NotificationIcon::Warning)->show();
 					} else {
 						Notification::create(fmt::format("Sucessfully generated {} color triggers!", colorTriggersNum), NotificationIcon::Success)->show();
 					}
 				} else {
-					m_fields->m_parsingNotification->hide();
+					m_fields->m_parsingNotification->setOpacity(0); // instantly hide the notification
 					if (selectedObjects.size() == 0) {
 						Notification::create("You must select at least 1 object!", NotificationIcon::Error)->show();
 					} else {
