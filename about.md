@@ -1,6 +1,10 @@
 # Generate Color Triggers
 
-This mod will let you be able to generate color triggers for every channels in the level. You can do this by pressing the <cb>**`F10`**</cb> keybind.
+This mod brings back an old `Better edit V4` *(mod made by **HJFod**)* feature which purpose was to generate a color trigger for each color channels in a level.
+
+---------
+
+You can do this by pressing the <cb>**`F10`**</cb> keybind.
 You can always **change it later** !
 
 Or if you want to, you can activate the `Show editor button` setting to have a button in the <cy>edit tab</cy> that will do the same thing as pressing `F10`. *(**enabled by default on mobile**)*
