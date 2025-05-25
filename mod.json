@@ -22,6 +22,12 @@
 			"default": false,
 			"description": "Will the color channels for the BG, G, MG, etc... will be included in the generated triggers as well"
 		},
+		"show-parsing-notif": {
+			"name": "Show 'parsing level' notification",
+			"type": "bool",
+			"default": false,
+			"description": "Shows a notification that the level is being parsed when generating color triggers"
+		},
 
 		"offsets-title": {
 			"name": "Offsets",

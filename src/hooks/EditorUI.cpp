@@ -19,9 +19,12 @@ class $modify(MyEditorUI, EditorUI) {
 		this->template addEventListener<InvokeBindFilter>([=](InvokeBindEvent* event) {
 			if (event->isDown()) {
 				m_fields->m_parsingNotification = Notification::create("Parsing level...", NotificationIcon::Loading, 5);
-				m_fields->m_parsingNotification->show();
 
 				auto selectedObjects = CCArrayExt<GameObject>(getSelectedObjects());
+
+                if (selectedObjects.size() == 1 && Mod::get()->getSettingValue<bool>("show-parsing-notif")) {
+                    m_fields->m_parsingNotification->show();
+                }
 
 				if (selectedObjects.size() == 1) {
 					GameObject* obj = selectedObjects[0];
@@ -40,14 +43,14 @@ class $modify(MyEditorUI, EditorUI) {
 					offset.y += offset_y;
 
 					int colorTriggersNum = static_cast<MyLevelEditorLayer*>(editorLayer)->genColorTriggers(selectedObjects[0], offset);
-                    m_fields->m_parsingNotification->setOpacity(0); // instantly hide the notification
+                    m_fields->m_parsingNotification->hide(); // instantly hide the notification
 					if (colorTriggersNum == 0) {
 						Notification::create("Created 0 color triggers.", NotificationIcon::Warning)->show();
 					} else {
 						Notification::create(fmt::format("Sucessfully generated {} color triggers!", colorTriggersNum), NotificationIcon::Success)->show();
 					}
 				} else {
-					m_fields->m_parsingNotification->setOpacity(0); // instantly hide the notification
+					m_fields->m_parsingNotification->hide(); // instantly hide the notification
 					if (selectedObjects.size() == 0) {
 						Notification::create("You must select at least 1 object!", NotificationIcon::Error)->show();
 					} else {
