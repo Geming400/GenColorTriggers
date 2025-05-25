@@ -25,22 +25,6 @@ const std::vector<int> allowedCustomColors = {
 	(int) CustomColors::MG2
 };
 
-const std::vector<int> allCustomColors = {
-	(int) CustomColors::BG,
-	(int) CustomColors::G1,
-	(int) CustomColors::G2,
-	(int) CustomColors::LINE,
-	(int) CustomColors::THREEDL,
-	(int) CustomColors::OBJ,
-	(int) CustomColors::LBG,
-	(int) CustomColors::MG,
-	(int) CustomColors::MG2,
-
-	(int) CustomColors::LIGHTER,
-	(int) CustomColors::BLACK,
-	(int) CustomColors::WHITE
-};
-
 /**
  * Checks if a given color is set inside of gd.
  * @param color the color that will be used to do the check
@@ -86,25 +70,29 @@ class $modify(MyLevelEditorLayer, LevelEditorLayer) {
 
 		std::string levelString = getLevelString();
 
-		auto colorChannels = modUtils::getColorChannelsFromLevelString(levelString);
+		auto colorChannels = modUtils::colorChannelsParser::getColorChannelsFromLevelString(levelString);
 
 		if (!colorChannels) {
 			Notification::create("No colour channels found!", NotificationIcon::Warning)->show();
 			return 0;
 		}
+		
+		for (const auto &colorTriggerContent : colorChannels.value()) {
+			if (Mod::get()->getSettingValue<bool>("include-builtin-color-channels")) {
+				if (!modUtils::isInVector(allowedCustomColors, colorTriggerContent.targetChannelID) && colorTriggerContent.targetChannelID >= 1000) { log::info("colorTriggerContent.targetChannelID = {}", colorTriggerContent.targetChannelID); continue; }
+			} else {
+				if (colorTriggerContent.targetChannelID >= 1000) { continue; }
+			}
 
-		for (const auto& [colorChannel, colorTriggerContent] : colorChannels.value()) {
 			auto obj = static_cast<EffectGameObject*>(createObject(COLOR_TRIGGER_OBJ_ID, offset, false));
 			
-			modUtils::colorTriggerContentToColorTrigger(obj, colorTriggerContent);
+			modUtils::colorChannelsParser::colorTriggerContentToColorTrigger(obj, colorTriggerContent);
 
 			if (m_currentLayer != -1) {
             	obj->m_editorLayer = m_currentLayer;
 			}
 			
-			if (isColorSet(colorTriggerContent.colorAction->m_color)) {
-				offset.y += 30;
-			}
+			offset.y += 30;
 
 			objects.push_back(obj);
 		}
@@ -113,8 +101,6 @@ class $modify(MyLevelEditorLayer, LevelEditorLayer) {
 		if (!(objects.size() == 0)) {
 			editorUI->deselectAll();
 		}
-
-		editorUI->selectObjects(objects.inner(), false);
 
 		return objects.size();
 	}
@@ -138,8 +124,8 @@ class $modify(MyEditorUI, EditorUI) {
 					double offset_y = Mod::get()->getSettingValue<double>("offset-y");
 
 					if (Mod::get()->getSettingValue<bool>("use-gd-grid-space")) {
-						offset_x = modUtils::coordinateToGDgridPos(offset_x);
-						offset_y = modUtils::coordinateToGDgridPos(offset_y);
+						offset_x = modUtils::coordinateToGDgridPos(offset_x, false);
+						offset_y = modUtils::coordinateToGDgridPos(offset_y, false);
 					}
 
 					offset.x += offset_x;
