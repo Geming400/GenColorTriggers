@@ -1,3 +1,5 @@
+#pragma once
+
 enum ColorString {
     FROM_RED = 1,
     FROM_GREEN,
