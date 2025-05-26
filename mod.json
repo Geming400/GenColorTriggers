@@ -10,15 +10,15 @@
 	"name": "Gen color triggers",
 	"version": "v1.0.1",
 	"developer": "Geming400",
-	"description": "",
+	"description": "Generate color triggers for each color channels",
 	"links": {
 		"source": "https://github.com/Geming400/GenColorTriggers"
 	},
- "tags": [
-  "offline",
-  "editor",
-  "utility"
- ]
+	"tags": [
+		"offline",
+		"editor",
+		"utility"
+	],
 	"resources": {
 		"spritesheets": {
 			"genColorTriggers-button": [
