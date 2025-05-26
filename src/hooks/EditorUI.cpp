@@ -75,15 +75,16 @@ class $modify(MyEditorUI, EditorUI) {
         if (Mod::get()->getSavedValue<bool>("first-time-loading", true)) { // if their are going into the editor for the first time after installing this then show a popup
             Mod::get()->setSavedValue<bool>("first-time-loading", false);
 
-			#ifdef GEODE_IS_DESKTOP
-				auto alert = FLAlertLayer::create("Hello!", "To generate color triggers please press 'F10'.", "Dismiss");
-				alert->m_scene = this;
-				alert->show();
-			#else
-				auto alert = FLAlertLayer::create("Hello!", "To generate color triggers please go to the 'edit' tab.", "Dismiss");
-				alert->m_scene = this;
-				alert->show();
-			#endif
+			FLAlertLayer* alert;
+
+			if (Mod::get()->getSettingValue<bool>("show-editor-button")) {
+				alert = FLAlertLayer::create("Hello!", "To generate color triggers please go to the 'edit' tab.", "Dismiss");
+			} else {
+				alert = FLAlertLayer::create("Hello!", "To generate color triggers please press 'F10'.", "Dismiss");
+			}
+
+			alert->m_scene = this;
+			alert->show();
 	    }
 
 		#ifdef GEODE_IS_DESKTOP
