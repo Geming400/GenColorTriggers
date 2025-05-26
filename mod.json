@@ -34,7 +34,7 @@
 		"include-builtin-color-channels": {
 			"name": "Include built-in color channels",
 			"type": "bool",
-			"default": false,
+			"default": true,
 			"description": "Will the color channels for the BG, G, MG, etc... will be included in the generated triggers as well"
 		},
 		"show-editor-button": {

@@ -14,7 +14,7 @@ On <cb>**mobile**</cb> you will need to go to the <cy>edit tab</cy> and press th
 ---------
 
 In this <cb>mod's setting</cb> you can also specify to generate the color channels for the "built-in" ones *(eg: BG, G, etc... colors)*.
-This is <cr>**disabled**</cr> by default !
+This is <cg>**enabled**</cg> by default !
 
 ## Credits
 
