@@ -15,7 +15,7 @@ using namespace geode::prelude;
         }
 
         if (Mod::get()->getSavedValue<bool>("show-editor-button", false) != Mod::get()->getSettingValue<bool>("show-editor-button")) {
-            const bool newValue = Mod::get()->getSavedValue<bool>("show-editor-button", false);
+            const bool newValue = Mod::get()->getSettingValue<bool>("show-editor-button", false);
 
             log::info("Desync found in setting 'first-time-loading'. Setting saved and setting value to {}", newValue);
             Mod::get()->setSavedValue<bool>("show-editor-button", newValue);
