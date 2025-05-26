@@ -32,18 +32,4 @@ namespace modUtils {
     CCPoint coordinatesToGDgridPos(CCPoint point, bool onGrid = true, float scaleMod = 1.0f);
 
     std::map<std::string, std::string> stringDictToMap(std::string& stringDict, std::string sep);
-
-    namespace colorChannelsParser {
-        ccHSVValue rawHSVtoHSVValue(std::string& rawHSVString);
-
-        std::optional<ColorTriggerContent> rawColorToColorTrigger(std::string& rawColorString);
-        std::optional<std::vector<ColorTriggerContent>> getColorChannelsFromLevelString(std::string& levelString);
-
-        /**
-         * Uses a `ColorTriggerContent` struct given from `rawColorToColorTrigger()` to change to property of a given `EffectGameObject*` according to the struct
-         * @param colorTrigger the `EffectGameObject` which properties will be changed
-         * @param triggerContent the `TriggerContent` struct used for changing the `EffectGameObject` instance's members
-         */
-        void colorTriggerContentToColorTrigger(EffectGameObject* colorTrigger, ColorTriggerContent triggerContent);
-    }
 }

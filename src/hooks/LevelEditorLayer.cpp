@@ -1,5 +1,6 @@
 #include "LevelEditorLayer.hpp"
 #include "../utils/utils.hpp"
+#include "../parser/parser.hpp"
 #include "../utils/customColors.hpp"
 
 
@@ -60,7 +61,7 @@ int MyLevelEditorLayer::genColorTriggers(GameObject* center, CCPoint offset) {
 
 	std::string levelString = getLevelString();
 
-	auto colorChannels = modUtils::colorChannelsParser::getColorChannelsFromLevelString(levelString);
+	auto colorChannels = colorChannelsParser::getColorChannelsFromLevelString(levelString);
 
 	if (!colorChannels) {
 		Notification::create("No colour channels found!", NotificationIcon::Warning)->show();
@@ -76,7 +77,7 @@ int MyLevelEditorLayer::genColorTriggers(GameObject* center, CCPoint offset) {
 
 		auto obj = static_cast<EffectGameObject*>(createObject(COLOR_TRIGGER_OBJ_ID, offset, false));
 		
-		modUtils::colorChannelsParser::colorTriggerContentToColorTrigger(obj, colorTriggerContent);
+		colorChannelsParser::colorTriggerContentToColorTrigger(obj, colorTriggerContent);
 
 		if (m_currentLayer != -1) {
 			obj->m_editorLayer = m_currentLayer;
