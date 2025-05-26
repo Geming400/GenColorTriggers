@@ -1,3 +1,8 @@
+# v1.0.2
+
+- Added mod tags
+- Added a mod description
+
 # v1.0.1
 
 - Mobile support
