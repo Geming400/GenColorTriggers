@@ -4,6 +4,8 @@
 
 using namespace geode::prelude;
 
+const int vectorSizePushLimit = 1050; // idk just in case very weird stuff happens
+
 #include <Geode/modify/LevelEditorLayer.hpp>
 class $modify(MyLevelEditorLayer, LevelEditorLayer) {
     /**

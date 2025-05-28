@@ -68,6 +68,8 @@ int MyLevelEditorLayer::genColorTriggers(GameObject* center, CCPoint offset) {
 		return 0;
 	}
 	
+	bool pushingIntoVector = true;
+
 	for (const auto &colorTriggerContent : colorChannels.value()) {
 		if (Mod::get()->getSettingValue<bool>("include-builtin-color-channels")) {
 			if (!modUtils::isInVector(allowedCustomColors, colorTriggerContent.targetChannelID) && colorTriggerContent.targetChannelID >= 1000) { continue; }
@@ -85,7 +87,14 @@ int MyLevelEditorLayer::genColorTriggers(GameObject* center, CCPoint offset) {
 		
 		offset.y += 30;
 
-		objects.push_back(obj);
+		if (pushingIntoVector) {
+			objects.push_back(obj);
+		}
+
+		if (objects.size() > vectorSizePushLimit) {
+			pushingIntoVector = false;
+			log::warn("Exceeded 'objects' vector limit (= {})", vectorSizePushLimit);
+		}
 	}
 	
 
