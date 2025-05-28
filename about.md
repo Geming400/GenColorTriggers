@@ -18,4 +18,4 @@ This is <cg>**enabled**</cg> by default !
 
 ## Credits
 
-Thanks to [SDSlayer](https://gdbrowser.com/u/SDSlayer) for the mod idea
+Thanks to [Sdslayer](https://gdbrowser.com/u/SDSlayer) for the mod idea
