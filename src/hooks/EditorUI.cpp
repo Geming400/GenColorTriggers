@@ -51,14 +51,15 @@ class $modify(MyEditorUI, EditorUI) {
 			offset.y += offset_y;
 
 			int colorTriggersNum = static_cast<MyLevelEditorLayer*>(m_fields->m_levelEditorLayer)->genColorTriggers(selectedObjects[0], offset);
-			m_fields->m_parsingNotification->hide(); // instantly hide the notification
+			m_fields->m_parsingNotification->hide();
 			if (colorTriggersNum == 0) {
 				Notification::create("Created 0 color triggers.", NotificationIcon::Warning)->show();
 			} else {
-				Notification::create(fmt::format("Sucessfully generated {} color triggers!", colorTriggersNum), NotificationIcon::Success)->show();
+				std::string colorTriggersNumStr = colorTriggersNum >= vectorSizePushLimit ? fmt::format("{}+", colorTriggersNum) : fmt::to_string(colorTriggersNum);
+				Notification::create(fmt::format("Sucessfully generated {} color triggers!", colorTriggersNumStr), NotificationIcon::Success)->show();
 			}
 		} else {
-			m_fields->m_parsingNotification->hide(); // instantly hide the notification
+			m_fields->m_parsingNotification->hide();
 			if (selectedObjects.size() == 0) {
 				Notification::create("You must select at least 1 object!", NotificationIcon::Error)->show();
 			} else {
