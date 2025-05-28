@@ -10,8 +10,9 @@ using namespace geode::prelude;
 namespace colorChannelsParser {
     ccHSVValue rawHSVtoHSVValue(std::string& rawHSVString);
 
-    std::optional<modUtils::ColorTriggerContent> rawColorToColorTrigger(std::string& rawColorString);
-    std::optional<std::vector<modUtils::ColorTriggerContent>> getColorChannelsFromLevelString(std::string& levelString);
+    std::optional<modUtils::ColorTriggerContent> rawColorStringToColorTrigger(std::string& rawColorString);
+    std::optional<modUtils::ColorTriggerContent> rawColorChannelToColorTrigger(std::string& rawColorChannelString);
+    std::optional<std::vector<modUtils::ColorTriggerContent>> getColorChannelsFromLevelString(const std::string& levelString);
 
     /**
      * Uses a `ColorTriggerContent` struct given from `rawColorToColorTrigger()` to change to property of a given `EffectGameObject*` according to the struct
