@@ -8,7 +8,7 @@
 	},
 	"id": "geming400.gen-color-triggers",
 	"name": "Gen color triggers",
-	"version": "v1.0.3",
+	"version": "v1.0.4",
 	"developer": "Geming400",
 	"description": "Generate color triggers for each color channels",
 	"links": {
@@ -50,6 +50,12 @@
 			"default": false,
 			"description": "Shows a notification that the level is being parsed when generating color triggers"
 		},
+		"use-legacy-hsv" : {
+			"name": "Use legacy HSV",
+			"type": "bool",
+			"default": true,
+			"description": "This setting will determine if newly generated color triggers will have the 'Legacy HSV' option turned on or off"
+		},
 
 		"offsets-title": {
 			"name": "Offsets",
@@ -62,14 +68,37 @@
 			"description": "If enabled, it will center the given coordinate on the grid. If disabled: 1 grid unit = 30 X/Y"
 		},
 		"offset-x": {
-			"name": "X",
+			"name": "X offset",
 			"type": "float",
 			"default": 0
 		},
 		"offset-y": {
-			"name": "Y",
+			"name": "Y offset",
 			"type": "float",
 			"default": 2
+		},
+
+		"prettify-trigger-pos-title": {
+			"name": "Prettify trigger positions",
+			"type": "title"
+		},
+		"prettify-trigger-pos": {
+			"name": "Prettify trigger positions",
+			"type": "bool",
+			"default": true
+		},
+		"for-each-triggers": {
+			"name": "For each",
+			"type": "int",
+			"default": 15,
+			"min": 1,
+			"description": "How many triggers make 1 column",
+			"control": {
+				"arrows": true,
+				"arrow-step": 1,
+				"big-arrows": true,
+				"big-arrow-step": 5
+			}
 		}
 	},
 	"dependencies": {
