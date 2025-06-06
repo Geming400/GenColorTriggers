@@ -49,103 +49,6 @@ ccHSVValue colorChannelsParser::rawHSVtoHSVValue(std::string& rawHSVString) {
 }
 
 // This function looks ugly but whatever
-std::optional<modUtils::ColorTriggerContent> colorChannelsParser::rawColorStringToColorTrigger(std::string& rawColorString) {
-    ColorAction* colorAction = ColorAction::create();
-    colorAction->retain();
-    int targetChannelID;
-
-    modUtils::ColorTriggerContent colorTriggerContent;
-
-    std::map<std::string, std::string> colorProperties = modUtils::stringDictToMap(rawColorString, "_");
-
-    // The color channel ID like needed for every color channels, so that's why were looking for that
-    if (!(MAP_HAS_COLOR_PROPERTY(colorProperties, ColorString::FROM_RED) && MAP_PROPERTY_VALUE_IS_VALID(colorProperties, ColorString::FROM_RED))) {
-        log::debug("A color string was parsed with no useful value found");
-        return std::nullopt;
-    }
-
-    // m_fromColor
-
-    if (MAP_PROPERTY_VALUE_CHECK(colorProperties, ColorString::FROM_RED)) {
-        int color = PROPERTY_VALUE_TO_INT(colorProperties, ColorString::FROM_RED);
-        colorAction->m_fromColor.r = color;
-        colorAction->m_color.r = color;
-    }
-    if (MAP_PROPERTY_VALUE_CHECK(colorProperties, ColorString::FROM_GREEN)) {
-        int color = PROPERTY_VALUE_TO_INT(colorProperties, ColorString::FROM_GREEN);
-        colorAction->m_fromColor.g = color;
-        colorAction->m_color.g = color;
-    }
-    if (MAP_PROPERTY_VALUE_CHECK(colorProperties, ColorString::FROM_BLUE)) {
-        int color = PROPERTY_VALUE_TO_INT(colorProperties, ColorString::FROM_BLUE);
-        colorAction->m_fromColor.b = color;
-        colorAction->m_color.b = color;
-    }
-
-    // m_toColor
-
-    if (MAP_PROPERTY_VALUE_CHECK(colorProperties, ColorString::TO_RED)) {
-        int color = PROPERTY_VALUE_TO_INT(colorProperties, ColorString::TO_RED);
-        colorAction->m_toColor.r = color;
-    }
-    if (MAP_PROPERTY_VALUE_CHECK(colorProperties, ColorString::TO_GREEN)) {
-        int color = PROPERTY_VALUE_TO_INT(colorProperties, ColorString::TO_GREEN);
-        colorAction->m_toColor.g = color;
-    }
-    if (MAP_PROPERTY_VALUE_CHECK(colorProperties, ColorString::TO_BLUE)) {
-        int color = PROPERTY_VALUE_TO_INT(colorProperties, ColorString::TO_BLUE);
-        colorAction->m_toColor.b = color;
-    }
-
-    // others
-
-    if (MAP_PROPERTY_VALUE_CHECK(colorProperties, ColorString::PLAYER_COLOR)) {
-        int color = PROPERTY_VALUE_TO_INT(colorProperties, ColorString::PLAYER_COLOR);
-        colorAction->m_playerColor = color;
-    }
-    if (MAP_PROPERTY_VALUE_CHECK(colorProperties, ColorString::BLENDING)) {
-        bool blending = PROPERTY_VALUE_TO_BOOL(colorProperties, ColorString::BLENDING);
-        colorAction->m_blending = blending;
-    }
-    if (MAP_PROPERTY_VALUE_CHECK(colorProperties, ColorString::COLOR_CHANNEL)) {
-        int colorChannel = PROPERTY_VALUE_TO_INT(colorProperties, ColorString::COLOR_CHANNEL);
-        colorTriggerContent.targetChannelID = colorChannel;
-    } 
-    if (MAP_PROPERTY_VALUE_CHECK(colorProperties, ColorString::FROM_OPACITY)) {
-        bool fromOpacity = PROPERTY_VALUE_TO_FLOAT(colorProperties, ColorString::FROM_OPACITY);
-        colorAction->m_fromOpacity = fromOpacity;
-    }
-    if (MAP_PROPERTY_VALUE_CHECK(colorProperties, ColorString::INHERITED_COLOR_CHANNEL)) {
-        int copyID = PROPERTY_VALUE_TO_INT(colorProperties, ColorString::INHERITED_COLOR_CHANNEL);
-        colorAction->m_copyID = copyID;
-    }
-    if (MAP_PROPERTY_VALUE_CHECK(colorProperties, ColorString::HSV)) {
-        ccHSVValue hsv = PROPERTY_VALUE_TO_HSV(colorProperties, ColorString::HSV);
-        colorAction->m_copyHSV = hsv;
-    }
-    if (MAP_PROPERTY_VALUE_CHECK(colorProperties, ColorString::DELTA_TIME)) {
-        float deltaTime = PROPERTY_VALUE_TO_FLOAT(colorProperties, ColorString::DELTA_TIME);
-        colorAction->m_deltaTime = deltaTime;
-    }
-    if (MAP_PROPERTY_VALUE_CHECK(colorProperties, ColorString::TO_OPACITY)) {
-        float toOpacity = PROPERTY_VALUE_TO_FLOAT(colorProperties, ColorString::TO_OPACITY);
-        colorAction->m_toOpacity = toOpacity;
-    }
-    if (MAP_PROPERTY_VALUE_CHECK(colorProperties, ColorString::DURATION)) {
-        float duration = PROPERTY_VALUE_TO_FLOAT(colorProperties, ColorString::DURATION);
-        colorAction->m_duration = duration;
-    }
-    if (MAP_PROPERTY_VALUE_CHECK(colorProperties, ColorString::COPY_OPACITY)) {
-        bool copyOpacity = PROPERTY_VALUE_TO_BOOL(colorProperties, ColorString::COPY_OPACITY);
-        colorAction->m_copyOpacity = copyOpacity;
-    }
-
-    colorTriggerContent.colorAction = colorAction;
-
-    return colorTriggerContent;
-}
-
-// This function looks ugly but whatever
 std::optional<modUtils::ColorTriggerContent> colorChannelsParser::rawColorChannelToColorTrigger(std::string& rawColorChannelString) {
     ColorAction* colorAction = ColorAction::create();
     colorAction->retain();
@@ -155,7 +58,7 @@ std::optional<modUtils::ColorTriggerContent> colorChannelsParser::rawColorChanne
 
     std::map<std::string, std::string> colorProperties = modUtils::stringDictToMap(rawColorChannelString, "_");
 
-    // The color channel ID like needed for every color channels, so that's why were looking for that
+    // The color channel ID is like needed for every color channel strings, so that's why were looking for that
     if (!(MAP_HAS_COLOR_PROPERTY(colorProperties, ColorString::COLOR_CHANNEL) && MAP_PROPERTY_VALUE_IS_VALID(colorProperties, ColorString::COLOR_CHANNEL))) {
         log::debug("A color channel was parsed with no useful value found");
         return std::nullopt;
@@ -194,8 +97,9 @@ std::optional<modUtils::ColorTriggerContent> colorChannelsParser::rawColorChanne
         colorTriggerContent.targetChannelID = colorChannel;
     } 
     if (MAP_PROPERTY_VALUE_CHECK(colorProperties, ColorString::FROM_OPACITY)) {
-        bool fromOpacity = PROPERTY_VALUE_TO_FLOAT(colorProperties, ColorString::FROM_OPACITY);
+        float fromOpacity = PROPERTY_VALUE_TO_FLOAT(colorProperties, ColorString::FROM_OPACITY);
         colorAction->m_fromOpacity = fromOpacity;
+        colorAction->m_currentOpacity = fromOpacity;
     }
     if (MAP_PROPERTY_VALUE_CHECK(colorProperties, ColorString::INHERITED_COLOR_CHANNEL)) {
         int copyID = PROPERTY_VALUE_TO_INT(colorProperties, ColorString::INHERITED_COLOR_CHANNEL);
@@ -242,7 +146,7 @@ std::optional<std::vector<modUtils::ColorTriggerContent>> colorChannelsParser::g
     }
 }
 
-void colorChannelsParser::colorTriggerContentToColorTrigger(EffectGameObject* colorTrigger, modUtils::ColorTriggerContent triggerContent) {
+void colorChannelsParser::colorTriggerContentToColorTrigger(EffectGameObject* colorTrigger, modUtils::ColorTriggerContent triggerContent, const bool useLegacyHSV) {
     ColorAction* colorAction = triggerContent.colorAction;
     int colorChannelID = triggerContent.targetChannelID;
 
@@ -253,9 +157,10 @@ void colorChannelsParser::colorTriggerContentToColorTrigger(EffectGameObject* co
     colorTrigger->m_usesPlayerColor2 = colorAction->m_playerColor == 2;
     colorTrigger->m_copyColorID = colorAction->m_copyID;
     colorTrigger->m_hsvValue = colorAction->m_copyHSV;
-    colorTrigger->m_legacyHSV = true; // idk it's true by default
     colorTrigger->m_copyOpacity = colorAction->m_copyOpacity;
+    colorTrigger->m_opacity = colorAction->m_fromOpacity;
     colorTrigger->m_duration = 0;
+    colorTrigger->m_legacyHSV = useLegacyHSV;
 
     auto label = colorTrigger->getChildByType<CCLabelBMFont>(0);
 
