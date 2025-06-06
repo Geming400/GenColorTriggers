@@ -1,3 +1,9 @@
+# v1.0.4
+
+- Fixed the opacity not being set
+- Added a setting to set `Legacy HSV` on generated color triggers
+- Added the `prettify triggers` setting
+
 # v1.0.3
 
 - Optimizations
