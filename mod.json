@@ -85,7 +85,8 @@
 		"prettify-trigger-pos": {
 			"name": "Prettify trigger positions",
 			"type": "bool",
-			"default": true
+			"default": true,
+			"description": "Instead of putting each triggers in 1 column, it will separate the number of triggers into multiple columns. The number of column is calculated with the 'For each' setting"
 		},
 		"for-each-triggers": {
 			"name": "For each",
@@ -93,6 +94,7 @@
 			"default": 15,
 			"min": 1,
 			"description": "How many triggers make 1 column",
+			"enable-if": "prettify-trigger-pos",
 			"control": {
 				"arrows": true,
 				"arrow-step": 1,
