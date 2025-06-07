@@ -160,7 +160,7 @@ void colorChannelsParser::colorTriggerContentToColorTrigger(EffectGameObject* co
     colorTrigger->m_copyOpacity = colorAction->m_copyOpacity;
     colorTrigger->m_opacity = colorAction->m_fromOpacity;
     colorTrigger->m_duration = 0;
-    colorTrigger->m_legacyHSV = useLegacyHSV;
+    colorTrigger->m_legacyHSV = !useLegacyHSV; // idk when m_legacyHSV == true it will show as toggled off in the editor
 
     auto label = colorTrigger->getChildByType<CCLabelBMFont>(0);
 
