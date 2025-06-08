@@ -124,8 +124,7 @@ std::optional<std::vector<modUtils::ColorTriggerContent>> colorChannelsParser::g
     std::vector<modUtils::ColorTriggerContent> out;
 
     std::string levelStart = levelString.substr(0, levelString.find(";", 0));
-    std::string splittedLevelStart = geode::utils::string::split(levelStart, ";")[0];
-    std::map<std::string, std::string> colorChannels = modUtils::stringDictToMap(splittedLevelStart, ",");
+    std::map<std::string, std::string> colorChannels = modUtils::stringDictToMap(levelStart, ",");
 
     if (colorChannels.contains(LVL_COLOR_CHANNELS)) {
         std::string colorChannelsProperties = colorChannels[LVL_COLOR_CHANNELS];
