@@ -70,7 +70,7 @@ int MyLevelEditorLayer::genColorTriggers(GameObject* center, CCPoint offset) {
 	int colorChannelsNum = generatableColorChannels.size();
 
 	float prettifyXoffset;
-	int numColumns = ceil((double) colorChannelsNum / (double) forEachTriggers);
+	int numColumns = ceil(static_cast<double>(colorChannelsNum) / static_cast<double>(forEachTriggers));
 	if (numColumns > 0) {
 		prettifyXoffset = 15 * (numColumns - 1);
 		log::debug("prettifyXoffset = {}", prettifyXoffset);
@@ -79,8 +79,7 @@ int MyLevelEditorLayer::genColorTriggers(GameObject* center, CCPoint offset) {
 	} else {
 		log::debug("numColumns < 0");
 	}
-
-
+	
 	int i = 1;
 	CCArrayExt<EffectGameObject> objects;
 	for (const auto &colorTriggerContent : generatableColorChannels) {
