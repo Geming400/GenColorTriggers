@@ -9,10 +9,12 @@
 
 // TO_<TYPE>
 #define PROPERTY_VALUE_TO_STRING(map, property) map[PROPERTY_TO_STRING(property)]
-#define PROPERTY_VALUE_TO_INT(map, property) std::stoi(map[PROPERTY_TO_STRING(property)])
-#define PROPERTY_VALUE_TO_FLOAT(map, property) std::stof(map[PROPERTY_TO_STRING(property)])
+// Here we can always assume that the unwrapped values are valid because we already checked if they existed before
+// We still use `unwrapOr` just in case but it shouldn't be needed (normally)
+#define PROPERTY_VALUE_TO_INT(map, property) utils::numFromString<int>(PROPERTY_VALUE_TO_STRING(map, property)).unwrapOr(0)
+#define PROPERTY_VALUE_TO_FLOAT(map, property) utils::numFromString<float>(PROPERTY_VALUE_TO_STRING(map, property)).unwrapOr(0)
 // #define PROPERTY_VALUE_TO_BOOL(map, property) PROPERTY_VALUE_TO_INT(map, property) == 1
-#define PROPERTY_VALUE_TO_BOOL(map, property) (bool) PROPERTY_VALUE_TO_INT(map, property)
+#define PROPERTY_VALUE_TO_BOOL(map, property) static_cast<bool>(PROPERTY_VALUE_TO_INT(map, property))
 #define PROPERTY_VALUE_TO_HSV(map, property) colorChannelsParser::rawHSVtoHSVValue(PROPERTY_VALUE_TO_STRING(map, property))
 
 #define MAP_PROPERTY_VALUE_IS_VALID(map, property) !(PROPERTY_VALUE_TO_STRING(map, property) == "")
@@ -28,22 +30,22 @@ ccHSVValue colorChannelsParser::rawHSVtoHSVValue(std::string& rawHSVString) {
     // 0 = Additive brightness (bool)  [4]
     //
     // separator = "a" (robtop was so lazy :sob:)
-
+    
     std::vector<std::string> HSVProperties = geode::utils::string::split(rawHSVString, "a");
 
     ccHSVValue hsv;
 
-    int hue = std::stoi(HSVProperties[0]);
-    float saturation = std::stof(HSVProperties[1]);
-    float brightness = std::stof(HSVProperties[2]);
-    bool isSaturationAdditive = std::stoi(HSVProperties[3]) == 1;
-    bool isBrightnessAdditive = std::stoi(HSVProperties[4]) == 1;
+    int hue = utils::numFromString<int>(HSVProperties[0]).unwrapOr(0);
+    float saturation = utils::numFromString<float>(HSVProperties[1]).unwrapOr(0);
+    float brightness = utils::numFromString<float>(HSVProperties[2]).unwrapOr(0);
+    bool additiveSaturation = utils::numFromString<int>(HSVProperties[3]).unwrapOr(0) == 1;
+    bool additiveBrightness = utils::numFromString<int>(HSVProperties[4]).unwrapOr(0) == 1;
 
     hsv.h = hue;
     hsv.s = saturation;
     hsv.v = brightness;
-    hsv.absoluteSaturation = isSaturationAdditive;
-    hsv.absoluteBrightness = isBrightnessAdditive;
+    hsv.absoluteSaturation = additiveSaturation;
+    hsv.absoluteBrightness = additiveBrightness;
 
     return hsv;
 }
