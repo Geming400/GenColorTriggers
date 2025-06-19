@@ -45,8 +45,8 @@ const std::map<int, std::string> customColorNames = {
 	{ (int) CustomColors::G2, "G2" },
 	{ (int) CustomColors::LINE, "L" },
 	{ (int) CustomColors::THREEDL, "3DL" },
-	{ (int) CustomColors::OBJ, "OBJ" },
+	{ (int) CustomColors::OBJ, "Obj" },
 	{ (int) CustomColors::LBG, "LBG" },
 	{ (int) CustomColors::MG, "MG"},
-	{ (int) CustomColors::MG2, "MG2" }
+	{ (int) CustomColors::MG2, "mg2" }
 };
