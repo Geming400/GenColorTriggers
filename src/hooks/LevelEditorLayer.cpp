@@ -104,7 +104,7 @@ int MyLevelEditorLayer::genColorTriggers(GameObject* center, CCPoint offset) {
 
 		if (objects.size() > vectorSizePushLimit) { // Additional check just in case the user did some tomfoolery
 			pushingIntoVector = false;
-			log::warn("Exceeded 'objects' vector limit somehow, idfk what you did but ok (= {})", vectorSizePushLimit);
+			log::warn("Exceeded 'objects' vector limit somehow, idfk what you did but ok (push limit size = {})", vectorSizePushLimit);
 		}
 
 		i++;
