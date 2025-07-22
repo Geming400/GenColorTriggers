@@ -7,9 +7,9 @@ This mod brings back an old `Better edit V4` *(mod made by **HJFod**)* feature w
 You can do this by pressing the <cb>**`F10`**</cb> keybind.
 You can always **change it later** !
 
-Or if you want to, you can activate the `Show editor button` setting to have a button in the <cy>edit tab</cy> that will do the same thing as pressing `F10`. *(**enabled by default on mobile**)*
+Or if you want to, you can activate the `Show editor button` setting to have a button in the <cy>edit tab</cy> that will do the same thing as pressing `F10`. *(**forced enabled on mobile**)*
 
-On <cb>**mobile**</cb> you will need to go to the <cy>edit tab</cy> and press the new button.
+On <cb>**mobile**</cb> you will need to go to the <cy>edit tab</cy> and press the new button added by this mod.
 
 ---------
 
