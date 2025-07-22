@@ -121,6 +121,10 @@ std::optional<modUtils::ColorTriggerContent> colorChannelsParser::rawColorChanne
     return colorTriggerContent;
 }
 
+// NOTE: If you want to have a full parser you can check this commit:
+// https://github.com/Geming400/GenColorTriggers/commit/3775726b8a1407faea8bfd96259f2dd3aa90a749
+//
+// This parser was only made for values found inside a raw color channel and not a raw color **string**
 
 std::optional<std::vector<modUtils::ColorTriggerContent>> colorChannelsParser::getColorChannelsFromLevelString(const std::string& levelString) {
     std::vector<modUtils::ColorTriggerContent> out;
