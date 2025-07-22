@@ -7,14 +7,13 @@
 using namespace geode::prelude;
 
 #ifdef GEODE_IS_DESKTOP
-	#include <geode.custom-keybinds/include/Keybinds.hpp>
-	using namespace keybinds;
+#include <geode.custom-keybinds/include/Keybinds.hpp>
+using namespace keybinds;
 #endif
 
 #include <Geode/modify/EditorUI.hpp>
 class $modify(MyEditorUI, EditorUI) {
 	struct Fields {
-		Notification* m_parsingNotification;
 		LevelEditorLayer* m_levelEditorLayer;
 	};
 
@@ -26,13 +25,7 @@ class $modify(MyEditorUI, EditorUI) {
 			return;
 		}
 
-		m_fields->m_parsingNotification = Notification::create("Parsing level...", NotificationIcon::Loading, 5);
-
 		auto selectedObjects = CCArrayExt<GameObject>(getSelectedObjects());
-
-		if (selectedObjects.size() == 1 && Mod::get()->getSettingValue<bool>("show-parsing-notif")) {
-			m_fields->m_parsingNotification->show();
-		}
 
 		if (selectedObjects.size() == 1) {
 			GameObject* obj = selectedObjects[0];
@@ -51,7 +44,6 @@ class $modify(MyEditorUI, EditorUI) {
 			offset.y += offset_y;
 
 			int colorTriggersNum = static_cast<MyLevelEditorLayer*>(m_fields->m_levelEditorLayer)->genColorTriggers(selectedObjects[0], offset);
-			m_fields->m_parsingNotification->hide();
 			if (colorTriggersNum == 0) {
 				Notification::create("Created 0 color triggers.", NotificationIcon::Warning)->show();
 			} else {
@@ -59,7 +51,6 @@ class $modify(MyEditorUI, EditorUI) {
 				Notification::create(fmt::format("Sucessfully generated {} color triggers!", colorTriggersNumStr), NotificationIcon::Success)->show();
 			}
 		} else {
-			m_fields->m_parsingNotification->hide();
 			if (selectedObjects.size() == 0) {
 				Notification::create("You must select at least 1 object!", NotificationIcon::Error)->show();
 			} else {
@@ -89,18 +80,18 @@ class $modify(MyEditorUI, EditorUI) {
 	    }
 
 		#ifdef GEODE_IS_DESKTOP
-			this->template addEventListener<InvokeBindFilter>([=](InvokeBindEvent* event) {
-				if (event->isDown()) {
-					onGenerateColorTriggers(nullptr);
-				}
-				// Return Propagate if you want other actions with the same bind to
-				// also be fired, or Stop if you want to halt propagation
-				return ListenerResult::Propagate;
-			}, "genColorTriggers"_spr);
+		this->template addEventListener<InvokeBindFilter>([=](InvokeBindEvent* event) {
+			if (event->isDown()) {
+				onGenerateColorTriggers(nullptr);
+			}
+			// Return Propagate if you want other actions with the same bind to
+			// also be fired, or Stop if you want to halt propagation
+			return ListenerResult::Propagate;
+		}, "genColorTriggers"_spr);
 
-			log::info("Registered keybind 'genColorTriggers' !");
+		log::info("Registered keybind 'genColorTriggers' !");
 		#else
-			log::info("User is on mobile, cannot register a keybind.");
+		log::info("User is on mobile, cannot register a keybind.");
 		#endif
 
 		return true;
