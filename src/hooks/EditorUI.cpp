@@ -11,7 +11,7 @@ using namespace keybinds;
 
 
 void MyEditorUI::onGenerateColorTriggers(CCObject*) {
-	if (!m_fields->m_levelEditorLayer) {
+	if (!m_editorLayer) { // Really NEVER should happen but idk
 		log::error("The editor layer wasn't found ??");
 		Notification::create("The editor layer wasn't found ??", NotificationIcon::Error)->show();
 
@@ -36,7 +36,7 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 		offset.x += offset_x;
 		offset.y += offset_y;
 
-		int colorTriggersNum = static_cast<MyLevelEditorLayer*>(m_fields->m_levelEditorLayer)->genColorTriggers(selectedObjects[0], offset);
+		int colorTriggersNum = static_cast<MyLevelEditorLayer*>(m_editorLayer)->genColorTriggers(selectedObjects[0], offset);
 		if (colorTriggersNum == 0) {
 			Notification::create("Created 0 color triggers.", NotificationIcon::Warning)->show();
 		} else {
@@ -54,8 +54,6 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 
 bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 	if (!EditorUI::init(editorLayer)) return false;
-
-	m_fields->m_levelEditorLayer = editorLayer;
 
 	if (Mod::get()->getSavedValue<bool>("first-time-loading", true)) { // if their are going into the editor for the first time after installing this then show a popup
 		Mod::get()->setSavedValue<bool>("first-time-loading", false);
