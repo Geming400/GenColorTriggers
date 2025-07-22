@@ -1,3 +1,8 @@
+# v1.1.0
+
+- Added "Color trigger generator options" gui
+- Removed "Show 'parsing level' notification" option
+
 # v1.0.4
 
 - Fixed the opacity not being set
