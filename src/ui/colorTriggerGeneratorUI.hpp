@@ -2,38 +2,15 @@
 
 #include <Geode/Geode.hpp>
 
+#include "../hooks/EditorUI.hpp"
+#include "generatorOptions.hpp"
+
 using namespace geode::prelude;
 
-struct GeneratorOptions {
-    // Generator
 
-    bool m_useGdGridSpace;
-    float m_offsetX;
-    float m_offsetY;
-
-    // Parser
-
-    bool m_genForSelectedObjects;
-    bool m_parseBuiltinColorChannels;
-
-
-    static GeneratorOptions fromSettingValues() {
-        GeneratorOptions options;
-        Mod* mod = Mod::get();
-
-        options.m_useGdGridSpace = mod->getSettingValue<bool>("use-gd-grid-space");
-        options.m_offsetX = (float) mod->getSettingValue<double>("offset-x");
-        options.m_offsetY = (float) mod->getSettingValue<double>("offset-y");
-
-        options.m_genForSelectedObjects = false;
-        options.m_parseBuiltinColorChannels = mod->getSettingValue<bool>("include-builtin-color-channels");
-        
-        return options;
-    }
-};
-
-class ColorTriggerGenUI : public geode::Popup<GeneratorOptions> {
+class ColorTriggerGenUI : public geode::Popup<GeneratorOptions, std::function<void(const GeneratorOptions)>> {
     GeneratorOptions m_options;
+    std::function<void(const GeneratorOptions)> m_callback;
 
     // Left side
 
@@ -42,11 +19,11 @@ class ColorTriggerGenUI : public geode::Popup<GeneratorOptions> {
 
     Ref<CCMenuItemToggler> m_useGdGridSpaceCheckbox;
     Ref<CCLabelBMFont> m_useGdGridSpaceText;
+    Ref<CCMenuItemSpriteExtra> m_useGdGridSpaceInfoButton;
 
-    // Float text input
-    Ref<TextInput> m_offsetXfield;
-    // Float text input
-    Ref<TextInput> m_offsetYfield;
+    // Float text inputs
+    Ref<TextInput> m_offsetXinput;
+    Ref<TextInput> m_offsetYinput;
 
     // Right side
 
@@ -55,9 +32,14 @@ class ColorTriggerGenUI : public geode::Popup<GeneratorOptions> {
 
     Ref<CCMenuItemToggler> m_generateForSelectedObjectsCheckbox;
     Ref<CCLabelBMFont> m_generateForSelectedObjectsText;
+    Ref<CCMenuItemSpriteExtra> m_generateForSelectedObjectsInfoButton;
 
     Ref<CCMenuItemToggler> m_parseBuiltinColorChannelsCheckbox;
     Ref<CCLabelBMFont> m_parseBuiltinColorChannelsText;
+    Ref<CCMenuItemSpriteExtra> m_parseBuiltinColorChannelsInfoButton;
+
+    Ref<CCLabelBMFont> m_moreLabel;
+    Ref<CCMenuItemSpriteExtra> m_moreButton;
 
     // Bottom
 
@@ -68,13 +50,24 @@ class ColorTriggerGenUI : public geode::Popup<GeneratorOptions> {
     void createRightSide();
     void createBottom();
 
-    CCMenuItemSpriteExtra* createInfoButton();
+    CCMenuItemSpriteExtra* createInfoButton(std::string title, std::string content);
+    CCMenuItemSpriteExtra* createInfoButtonFromSetting(std::string title, std::string_view settingID);
+    CCMenuItemSpriteExtra* createInfoButtonFromSetting(std::string_view settingID);
     CCLayerColor* createSeparator();
     CCLayerColor* createSeparator(CCPoint pos, float width = 150.0f, float height = 2.0f);
 
 protected:
-    bool setup(GeneratorOptions value) override;
+    bool setup(GeneratorOptions options, std::function<void(const GeneratorOptions)>) override;
 
 public:
-    static ColorTriggerGenUI* create(GeneratorOptions options = GeneratorOptions::fromSettingValues());
+    static ColorTriggerGenUI* create(
+        GeneratorOptions options,
+        std::function<void(const GeneratorOptions)> callback
+    );
+
+    static constexpr auto POPUP_ID = "colorTriggerGenPopup"_spr;
+
+    GeneratorOptions getOptions();
+
+    void setCallback(std::function<void(const GeneratorOptions)> callback);
 };
