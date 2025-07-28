@@ -44,12 +44,6 @@
 			"platforms": ["desktop"],
 			"description": "Used to make a button appear in the 'edit' tab of the editor. This is enabled by default on mobile"
 		},
-		"show-parsing-notif": {
-			"name": "Show 'parsing level' notification",
-			"type": "bool",
-			"default": false,
-			"description": "Shows a notification that the level is being parsed when generating color triggers"
-		},
 		"use-legacy-hsv" : {
 			"name": "Use legacy HSV",
 			"type": "bool",
