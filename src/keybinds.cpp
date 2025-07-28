@@ -18,7 +18,8 @@ $execute {
         { Keybind::create(KEY_F10, Modifier::None) },
         // Category; use slashes for specifying subcategories. See the
         // Category class for default categories
-        Category::EDITOR
+        Category::EDITOR,
+        false // repeatable = false
     });
 }
 #endif

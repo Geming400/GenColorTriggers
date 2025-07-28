@@ -2,6 +2,7 @@
 
 - Added "Color trigger generator options" gui
 - Removed "Show 'parsing level' notification" option
+- Made the keybind not repeatable
 
 # v1.0.4
 

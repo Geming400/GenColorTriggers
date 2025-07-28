@@ -22,6 +22,4 @@ endif()
 
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 
-add_compile_definitions(UI_TEST) # related to './ui/uitest.cpp'
-
 setup_geode_mod(${PROJECT_NAME})
