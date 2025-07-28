@@ -1,16 +1,21 @@
 #include "EditorUI.hpp"
 
 #include "LevelEditorLayer.hpp"
-#include "../utils/utils.hpp"
 
 #ifdef GEODE_IS_DESKTOP
 #include <geode.custom-keybinds/include/Keybinds.hpp>
 using namespace keybinds;
 #endif
 
+std::string bindAsString(std::string bindID, size_t defaultIndex = 0) {
+	auto bind = BindManager::get()->getBindable(bindID);
+	std::string strBind = (*bind).getDefaults()[defaultIndex]->toString();
 
+	return strBind;
+}
 
-void MyEditorUI::onGenerateColorTriggers(CCObject*) {
+// Just using as a reference
+void MyEditorUI::onGenerateColorTriggers2(CCObject*) {
 	if (!m_editorLayer) { // Really NEVER should happen but idk
 		log::error("The editor layer wasn't found ??");
 		Notification::create("The editor layer wasn't found ??", NotificationIcon::Error)->show();
@@ -18,7 +23,7 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 		return;
 	}
 
-	auto selectedObjects = CCArrayExt<GameObject>(getSelectedObjects());
+	auto selectedObjects = CCArrayExt<GameObject>(this->getSelectedObjects());
 
 	if (selectedObjects.size() == 1) {
 		GameObject* obj = selectedObjects[0];
@@ -28,6 +33,7 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 		double offset_x = Mod::get()->getSettingValue<double>("offset-x");
 		double offset_y = Mod::get()->getSettingValue<double>("offset-y");
 
+		// TODO: Make the ui show and link everything possible from `GeneratorOptions` in here
 		if (Mod::get()->getSettingValue<bool>("use-gd-grid-space")) {
 			offset_x = modUtils::coordinateToGDgridPos(offset_x, false);
 			offset_y = modUtils::coordinateToGDgridPos(offset_y, false);
@@ -36,9 +42,10 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 		offset.x += offset_x;
 		offset.y += offset_y;
 
-		int colorTriggersNum = static_cast<MyLevelEditorLayer*>(m_editorLayer)->genColorTriggers(selectedObjects[0], offset);
+		int colorTriggersNum = static_cast<MyLevelEditorLayer*>(m_editorLayer)->genColorTriggers(selectedObjects[0], offset, GeneratorOptions::fromSettingValues());
 		if (colorTriggersNum == 0) {
-			Notification::create("Created 0 color triggers.", NotificationIcon::Warning)->show();
+			log::warn("Created 0 color triggers.");
+			Notification::create("Created 0 color triggers.", NotificationIcon::Warning)->show(); // Isn't supposed to happen since there are the bg colors, etc...
 		} else {
 			std::string colorTriggersNumStr = colorTriggersNum >= vectorSizePushLimit ? fmt::format("{}+", colorTriggersNum) : fmt::to_string(colorTriggersNum);
 			Notification::create(fmt::format("Sucessfully generated {} color triggers!", colorTriggersNumStr), NotificationIcon::Success)->show();
@@ -52,8 +59,63 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 	}
 }
 
+void MyEditorUI::generateColorTriggers(const GeneratorOptions options) {
+	m_fields->m_genOptions = std::nullopt;
+
+	auto selectedObjects = CCArrayExt<GameObject>(this->getSelectedObjects());
+}
+
+void MyEditorUI::onGenerateColorTriggers(CCObject*) {
+	if (!m_editorLayer) { // Really NEVER should happen btw
+		log::error("The editor layer wasn't found ??");
+		Notification::create("The editor layer wasn't found ??", NotificationIcon::Error)->show();
+
+		return;
+	}
+
+	if (m_fields->m_genOptions) {
+		m_fields->m_waitingForSelectionNotification->waitAndHide();
+
+		generateColorTriggers(*m_fields->m_genOptions);
+
+		return;
+	}
+
+	auto selectedObjects = CCArrayExt<GameObject>(this->getSelectedObjects());
+
+	if (selectedObjects.size() == 1) {
+		if (
+			m_editorLayer->getParent()->getChildByID(ColorTriggerGenUI::POPUP_ID) ||
+			m_editorLayer->getParent()->getChildByID("waiting-for-selection-notification"_spr)
+		) { return; }
+
+		m_fields->m_genUI = ColorTriggerGenUI::create(GeneratorOptions::fromSettingValues(), [this](const GeneratorOptions options) {
+			if (options.m_genForSelectedObjects) {
+				m_fields->m_genOptions = options;
+				this->deselectAll();
+
+				log::info("m_fields->m_waitingForSelectionNotification == nullptr: {}", m_fields->m_waitingForSelectionNotification == nullptr ? true : false);
+				m_fields->m_waitingForSelectionNotification->stopAllActions();
+				m_fields->m_waitingForSelectionNotification->show(Alignement(MIDDLE, TOP));
+				log::info("m_fields->m_waitingForSelectionNotification == nullptr: {}", m_fields->m_waitingForSelectionNotification == nullptr ? true : false);
+			} else {
+				generateColorTriggers(options);
+			}
+		});
+		m_fields->m_genUI->show();
+	} else {
+		if (selectedObjects.size() == 0) {
+			Notification::create("You must select at least 1 object!", NotificationIcon::Error)->show();
+		} else {
+			Notification::create("You must select only 1 object!", NotificationIcon::Error)->show();
+		}
+	}
+}
+
 bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 	if (!EditorUI::init(editorLayer)) return false;
+
+	m_fields->m_waitingForSelectionNotification = createWaitingForSelectionNotif();
 
 	if (Mod::get()->getSavedValue<bool>("first-time-loading", true)) { // if their are going into the editor for the first time after installing this then show a popup
 		Mod::get()->setSavedValue<bool>("first-time-loading", false);
@@ -63,7 +125,11 @@ bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 		if (Mod::get()->getSettingValue<bool>("show-editor-button")) {
 			alert = FLAlertLayer::create("Hello!", "To generate color triggers please go to the 'edit' tab.", "Dismiss");
 		} else {
-			alert = FLAlertLayer::create("Hello!", "To generate color triggers please press 'F10'.", "Dismiss");
+			alert = FLAlertLayer::create(
+				"Hello!",
+				fmt::format("To generate color triggers please press '{}'.", bindAsString("genColorTriggers"_spr)),
+				"Dismiss"
+			);
 		}
 
 		alert->m_scene = this;
@@ -99,4 +165,41 @@ void MyEditorUI::createMoveMenu() {
 		int columns = GameManager::sharedState()->getIntGameVariable("0050");
 		m_editButtonBar->reloadItems(rows, columns);
 	}
+}
+
+PositionableNotification* MyEditorUI::createWaitingForSelectionNotif() {
+	auto notif = PositionableNotification::create(
+		createWaitingForSelectionNotifText(),
+		NotificationIcon::Info,
+		0
+	);
+	//notif->setKeepAcrossSceneChanges(false);
+	notif->setID("waiting-for-selection-notification"_spr);
+	notif->retain();
+
+	return notif;
+}
+
+std::string MyEditorUI::createWaitingForSelectionNotifText() {
+	std::string ret;
+
+	if (Mod::get()->getSavedValue<bool>("show-editor-button")) {
+		ret = "Please select objects and then press the editor button again";
+	} else {
+		#ifdef GEODE_IS_DESKTOP
+		ret = fmt::format("Please select objects and then press '{}' again", bindAsString("genColorTriggers"_spr));
+		#else
+		ret = "Please select objects and then press the editor button again" // Shouldn't happen, but just in case
+		#endif
+	}
+
+	return ret;
+}
+
+
+$execute {
+    listenForSettingChanges("show-editor-button", [](bool value) {
+        MyEditorUI* editorUI = static_cast<MyEditorUI*>(EditorUI::get());
+		if (editorUI) editorUI->m_fields->m_waitingForSelectionNotification->setString(MyEditorUI::createWaitingForSelectionNotifText());
+    });
 }

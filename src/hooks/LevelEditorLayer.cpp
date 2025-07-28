@@ -1,5 +1,4 @@
 #include "LevelEditorLayer.hpp"
-#include "../utils/utils.hpp"
 #include "../parser/parser.hpp"
 #include "../utils/customColors.hpp"
 #include <cmath>
@@ -23,20 +22,7 @@ const std::vector<int> allowedCustomColors = {
 	(int) CustomColors::MG2
 };
 
-/**
- * Checks if a given color is set inside of gd.
- * @param color the color that will be used to do the check
- * @note this will check if the `r`, `g` and `b` values are all set to 255
- */
-bool isColorSet(const ccColor3B& color) {
-	return !((color.r == 255) && (color.g == 255) && (color.b == 255));
-}
-
-#define GET_COLOR_ACTION_DICT(levelSettings) levelSettings->m_effectManager->m_colorActionDict
-#define CCDICT_TO_CCDICTEXT(key, value, CCDict) 
-
-
-std::vector<modUtils::ColorTriggerContent> getGeneratableColorChannels(std::vector<modUtils::ColorTriggerContent> colorChannels) {
+std::vector<modUtils::ColorTriggerContent> MyLevelEditorLayer::getGeneratableColorChannels(std::vector<modUtils::ColorTriggerContent> colorChannels, bool includeBuiltInColorChannels) {
 	std::vector<modUtils::ColorTriggerContent> generatableColorChannels;
 	for (const auto &colorTriggerContent : colorChannels) {
 		if (Mod::get()->getSettingValue<bool>("include-builtin-color-channels")) {
@@ -51,7 +37,19 @@ std::vector<modUtils::ColorTriggerContent> getGeneratableColorChannels(std::vect
 	return generatableColorChannels;
 }
 
-int MyLevelEditorLayer::genColorTriggers(GameObject* center, CCPoint offset) {	
+std::vector<modUtils::ColorTriggerContent> MyLevelEditorLayer::getGeneratableColorChannels(std::vector<modUtils::ColorTriggerContent> colorChannels, GeneratorOptions options) {
+	std::vector<modUtils::ColorTriggerContent> generatableColorChannels = getGeneratableColorChannels(colorChannels, options.m_parseBuiltinColorChannels);
+
+	auto selectedObjects = CCArrayExt<GameObject>(m_editorUI->getSelectedObjects());
+
+	for (const auto &obj : selectedObjects) {
+		// TODO
+	}
+
+	return generatableColorChannels;
+}
+
+int MyLevelEditorLayer::genColorTriggers(GameObject* center, CCPoint offset, GeneratorOptions options) {	
 	const CCPoint originalOffset = offset;
 	const int64_t forEachTriggers = Mod::get()->getSettingValue<int64_t>("for-each-triggers");
 	const auto editorUI = this->m_editorUI;
@@ -66,7 +64,7 @@ int MyLevelEditorLayer::genColorTriggers(GameObject* center, CCPoint offset) {
 		return 0;
 	}
 
-	auto generatableColorChannels = getGeneratableColorChannels(colorChannels.value());
+	auto generatableColorChannels = getGeneratableColorChannels(colorChannels.value(), options.m_parseBuiltinColorChannels);
 	int colorChannelsNum = generatableColorChannels.size();
 
 	float prettifyXoffset;
