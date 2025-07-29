@@ -115,4 +115,6 @@ class PositionableNotification : public Notification {
 
         bool getKeepAcrossSceneChanges();
         void setKeepAcrossSceneChanges(bool value);
+
+        void setTimeMember(float time);
 };

@@ -68,6 +68,8 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 		if (selectedObjects.size() == 0) {
 			m_fields->m_waitingForSelectionNotification->setString("Sucessfully cancelled !");
 			m_fields->m_waitingForSelectionNotification->setIcon(NotificationIcon::Success);
+
+			m_fields->m_genOptions = std::nullopt;
 			return;
 		}
 
@@ -90,10 +92,9 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 					m_fields->m_genOptions = options;
 					this->deselectAll();
 
-					log::info("m_fields->m_waitingForSelectionNotification == nullptr: {}", m_fields->m_waitingForSelectionNotification == nullptr ? true : false);
 					m_fields->m_waitingForSelectionNotification->stopAllActions();
+					m_fields->m_waitingForSelectionNotification->setTimeMember(0.f);
 					m_fields->m_waitingForSelectionNotification->show(Alignement(MIDDLE, TOP));
-					log::info("m_fields->m_waitingForSelectionNotification == nullptr: {}", m_fields->m_waitingForSelectionNotification == nullptr ? true : false);
 				} else {
 					generateColorTriggers(options);
 				}

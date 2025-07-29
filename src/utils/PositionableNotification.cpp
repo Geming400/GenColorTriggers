@@ -126,3 +126,7 @@ CCPoint PositionableNotification::getMiddleScreenPos() {
 
 bool PositionableNotification::getKeepAcrossSceneChanges() { return m_keepAcrossSceneChanges; }
 void PositionableNotification::setKeepAcrossSceneChanges(bool value) { m_keepAcrossSceneChanges = value; }
+
+void PositionableNotification::setTimeMember(float time) {
+    m_time = time;
+}
