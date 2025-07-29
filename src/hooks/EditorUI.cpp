@@ -8,10 +8,14 @@ using namespace keybinds;
 #endif
 
 std::string bindAsString(std::string bindID, size_t defaultIndex = 0) {
+	#ifdef GEODE_IS_DESKTOP
 	auto bind = BindManager::get()->getBindable(bindID);
 	std::string strBind = (*bind).getDefaults()[defaultIndex]->toString();
 
 	return strBind;
+	#else
+	return "MOBILE USER, NO KEYBIND";
+	#endif
 }
 
 void MyEditorUI::generateColorTriggers(const GeneratorOptions options) {
