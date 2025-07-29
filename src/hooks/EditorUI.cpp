@@ -91,6 +91,7 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 		m_fields->m_centerBlock = selectedObjects[0];
 
 		if (Mod::get()->getSettingValue<bool>("show-ui")) {
+			PositionableNotification::create("TEST")->show(Alignement(MIDDLE, TOP));
 			m_fields->m_genUI = ColorTriggerGenUI::create(GeneratorOptions::fromSettingValues(), [this](const GeneratorOptions options) {
 				if (options.m_genForSelectedObjects) {
 					m_fields->m_genOptions = options;
@@ -122,8 +123,6 @@ bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 	if (!EditorUI::init(editorLayer)) return false;
 
 	m_fields->m_waitingForSelectionNotification = createWaitingForSelectionNotif();
-
-	PositionableNotification::create("TEST")->show(Alignement(MIDDLE, TOP));
 
 	if (Mod::get()->getSavedValue<bool>("first-time-loading", true)) { // if their are going into the editor for the first time after installing this then show a popup
 		Mod::get()->setSavedValue<bool>("first-time-loading", false);
