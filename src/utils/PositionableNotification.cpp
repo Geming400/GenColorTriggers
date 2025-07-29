@@ -57,7 +57,7 @@ void PositionableNotification::show(CCPoint pos) {
     }
 
     this->runAction(CCSequence::create(
-        CCCallFunc::create(this, callfunc_selector(PositionableNotification::animateIn)),
+        CCCallFunc::create(this, callfunc_selector(Notification::animateIn)),
         // wait for fade-in to finish
         CCDelayTime::create(.3f),
         CCCallFunc::create(this, callfunc_selector(PositionableNotification::wait)),
