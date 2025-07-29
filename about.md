@@ -23,6 +23,11 @@ Whenever you open the UI, it will use the <cb>mod's settings value</cb>, but if 
 In this <cb>mod's setting</cb> you can also specify to generate the color channels for the "built-in" ones *(eg: BG, G, etc... colors)*.
 This is <cg>**enabled**</cg> by default !
 
+## Why this mod ?
+
+This mod can be used to make collab merging a little bit more easily.
+This won't simply every aspect of merging parts of a collab, but can certainly make it easier.
+
 ## Credits
 
 Thanks to [Sdslayer](https://gdbrowser.com/u/SDSlayer) for the mod idea
