@@ -99,6 +99,7 @@ void PositionableNotification::show() {
 }
 
 void PositionableNotification::hide() {
+    log::info("PositionableNotification::hide()");
     this->stopAllActions();
     this->runAction(CCSequence::create(
         CCCallFunc::create(this, callfunc_selector(PositionableNotification::animateOut)),
@@ -110,6 +111,7 @@ void PositionableNotification::hide() {
 }
 
 void PositionableNotification::wait() {
+    log::info("PositionableNotification::wait()");
     this->stopAllActions();
     if (m_time) {
         this->runAction(CCSequence::create(
@@ -120,6 +122,7 @@ void PositionableNotification::wait() {
     }
 }
 void PositionableNotification::setTime(float time) {
+    log::info("PositionableNotification::setTime()");
     m_time = time;
     this->wait();
 }
