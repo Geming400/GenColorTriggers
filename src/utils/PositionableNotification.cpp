@@ -128,11 +128,14 @@ void PositionableNotification::wait() {
     log::info("PositionableNotification::wait()");
     this->stopAllActions();
     if (m_time) {
+        log::info("m_time = {}", m_time);
         this->runAction(CCSequence::create(
             CCDelayTime::create(m_time),
             CCCallFunc::create(this, callfunc_selector(PositionableNotification::hide)),
             nullptr
         ));
+    } else {
+        log::info("m_time = NOT SET");
     }
 }
 void PositionableNotification::setTime(float time) {
