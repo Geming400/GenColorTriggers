@@ -108,6 +108,7 @@ class PositionableNotification : public Notification {
         void show();
 
         void hide();
+        void animateIn();
 
         void wait();
         void setTime(float time);
