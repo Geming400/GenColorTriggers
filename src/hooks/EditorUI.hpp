@@ -16,11 +16,12 @@ class $modify(MyEditorUI, EditorUI) {
     struct Fields {
         PositionableNotification* m_waitingForSelectionNotification;
         std::optional<GeneratorOptions> m_genOptions; // Last generator options
+        WeakRef<GameObject> m_centerBlock;
 
         ColorTriggerGenUI* m_genUI;
     };
 
-    void onGenerateColorTriggers2(CCObject*);
+    void onGenerateColorTriggers_old(CCObject*);
     void onGenerateColorTriggers(CCObject*);
     void generateColorTriggers(const GeneratorOptions options);
 

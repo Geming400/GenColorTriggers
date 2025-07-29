@@ -15,7 +15,7 @@ std::string bindAsString(std::string bindID, size_t defaultIndex = 0) {
 }
 
 // Just using as a reference
-void MyEditorUI::onGenerateColorTriggers2(CCObject*) {
+void MyEditorUI::onGenerateColorTriggers_old(CCObject*) {
 	if (!m_editorLayer) { // Really NEVER should happen but idk
 		log::error("The editor layer wasn't found ??");
 		Notification::create("The editor layer wasn't found ??", NotificationIcon::Error)->show();
@@ -63,6 +63,35 @@ void MyEditorUI::generateColorTriggers(const GeneratorOptions options) {
 	m_fields->m_genOptions = std::nullopt;
 
 	auto selectedObjects = CCArrayExt<GameObject>(this->getSelectedObjects());
+	
+	if (!m_fields->m_centerBlock) {
+		Notification::create("The center block doesn't seem to exist anymore.", NotificationIcon::Warning);
+		return;
+	}
+	auto centerBlock = m_fields->m_centerBlock.lock();
+
+	CCPoint offset = centerBlock->getPosition();
+
+	double offset_x = Mod::get()->getSettingValue<double>("offset-x");
+	double offset_y = Mod::get()->getSettingValue<double>("offset-y");
+
+	// TODO: Make the ui show and link everything possible from `GeneratorOptions` in here
+	if (options.m_useGdGridSpace) {
+		offset_x = modUtils::coordinateToGDgridPos(offset_x, false);
+		offset_y = modUtils::coordinateToGDgridPos(offset_y, false);
+	}
+
+	offset.x += offset_x;
+	offset.y += offset_y;
+
+	size_t colorTriggersNum = static_cast<MyLevelEditorLayer*>(m_editorLayer)->genColorTriggers(centerBlock, offset, options);
+	if (colorTriggersNum == 0) { // Isn't supposed to happen since there are the bg colors, etc...
+		log::warn("Generated 0 color triggers.");
+		Notification::create("Generated 0 color triggers !!! (This is NOT supposed to happen)", NotificationIcon::Warning)->show();
+	} else {
+		std::string colorTriggersNumStr = colorTriggersNum >= vectorSizePushLimit ? fmt::format("{}+", colorTriggersNum) : fmt::to_string(colorTriggersNum);
+		Notification::create(fmt::format("Sucessfully generated {} color triggers!", colorTriggersNumStr), NotificationIcon::Success)->show();
+	}
 }
 
 void MyEditorUI::onGenerateColorTriggers(CCObject*) {
@@ -73,21 +102,33 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 		return;
 	}
 
+	/*
+	log::info("m_isPaused = {}", m_isPaused);
+	if (m_isPaused) return;
+	*/
+
+	auto selectedObjects = CCArrayExt<GameObject>(this->getSelectedObjects());
+
 	if (m_fields->m_genOptions) {
 		m_fields->m_waitingForSelectionNotification->waitAndHide();
+		if (selectedObjects.size() == 0) {
+			m_fields->m_waitingForSelectionNotification->setString("Sucessfully cancelled !");
+			m_fields->m_waitingForSelectionNotification->setIcon(NotificationIcon::Success);
+			return;
+		}
 
 		generateColorTriggers(*m_fields->m_genOptions);
 
 		return;
 	}
 
-	auto selectedObjects = CCArrayExt<GameObject>(this->getSelectedObjects());
-
 	if (selectedObjects.size() == 1) {
 		if (
 			m_editorLayer->getParent()->getChildByID(ColorTriggerGenUI::POPUP_ID) ||
 			m_editorLayer->getParent()->getChildByID("waiting-for-selection-notification"_spr)
 		) { return; }
+
+		m_fields->m_centerBlock = selectedObjects[0];
 
 		m_fields->m_genUI = ColorTriggerGenUI::create(GeneratorOptions::fromSettingValues(), [this](const GeneratorOptions options) {
 			if (options.m_genForSelectedObjects) {

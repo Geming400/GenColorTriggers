@@ -14,7 +14,7 @@ class $modify(MyLevelEditorLayer, LevelEditorLayer) {
      * Generate color triggers for each channels
      * @return the number of generated color triggers
      */
-    int genColorTriggers(GameObject* center, CCPoint offset, GeneratorOptions options);
+    size_t genColorTriggers(GameObject* center, CCPoint offset, GeneratorOptions options);
 
     std::vector<modUtils::ColorTriggerContent> getGeneratableColorChannels(std::vector<modUtils::ColorTriggerContent> colorChannels, bool includeBuiltInColorChannels);
     std::vector<modUtils::ColorTriggerContent> getGeneratableColorChannels(std::vector<modUtils::ColorTriggerContent> colorChannels, GeneratorOptions options);

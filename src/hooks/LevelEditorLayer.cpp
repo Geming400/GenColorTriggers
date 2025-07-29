@@ -22,10 +22,30 @@ const std::vector<int> allowedCustomColors = {
 	(int) CustomColors::MG2
 };
 
+/* For debugging:
+template<typename T>
+void printVector(T vec) {
+	log::info("(");
+	for (auto& elem : vec)
+    	log::info("  {}", elem);
+	log::info(")");
+	log::info("size = {}", vec.size());
+}
+
+
+void printVector(std::vector<modUtils::ColorTriggerContent> vec) {
+	log::info("(");
+	for (auto& elem : vec)
+    	log::info("  {}", elem.targetChannelID);
+	log::info(")");
+	log::info("size = {}", vec.size());
+}
+*/
+
 std::vector<modUtils::ColorTriggerContent> MyLevelEditorLayer::getGeneratableColorChannels(std::vector<modUtils::ColorTriggerContent> colorChannels, bool includeBuiltInColorChannels) {
 	std::vector<modUtils::ColorTriggerContent> generatableColorChannels;
 	for (const auto &colorTriggerContent : colorChannels) {
-		if (Mod::get()->getSettingValue<bool>("include-builtin-color-channels")) {
+		if (includeBuiltInColorChannels) {
 			if (!modUtils::isInVector(allowedCustomColors, colorTriggerContent.targetChannelID) && colorTriggerContent.targetChannelID >= 1000) { continue; }
 		} else {
 			if (colorTriggerContent.targetChannelID >= 1000) { continue; }
@@ -34,22 +54,50 @@ std::vector<modUtils::ColorTriggerContent> MyLevelEditorLayer::getGeneratableCol
 		generatableColorChannels.push_back(colorTriggerContent);
 	}
 
+	generatableColorChannels.shrink_to_fit();
 	return generatableColorChannels;
 }
 
 std::vector<modUtils::ColorTriggerContent> MyLevelEditorLayer::getGeneratableColorChannels(std::vector<modUtils::ColorTriggerContent> colorChannels, GeneratorOptions options) {
+	std::unordered_set<unsigned int> colorChannelIDs;
 	std::vector<modUtils::ColorTriggerContent> generatableColorChannels = getGeneratableColorChannels(colorChannels, options.m_parseBuiltinColorChannels);
 
 	auto selectedObjects = CCArrayExt<GameObject>(m_editorUI->getSelectedObjects());
 
-	for (const auto &obj : selectedObjects) {
-		// TODO
+	for (const auto& obj : selectedObjects) {
+		if (options.m_genForSelectedObjects) {
+			std::optional<int> baseColorID; // Normally there always should be a base color, but just in case
+			std::optional<int> detailColorID;
+
+			if (obj->m_baseColor) baseColorID = obj->m_baseColor->m_colorID;
+			else baseColorID = std::nullopt;
+
+			if (obj->m_detailColor) detailColorID = obj->m_detailColor->m_colorID;
+			else detailColorID = std::nullopt;
+
+			if (baseColorID) colorChannelIDs.insert(*baseColorID);
+			if (detailColorID) colorChannelIDs.insert(*detailColorID);
+		}
 	}
 
-	return generatableColorChannels;
+	if (options.m_genForSelectedObjects) {
+		std::vector<modUtils::ColorTriggerContent> newGeneratableColorChannels;
+
+		for (size_t i = 0; i < generatableColorChannels.size(); i++) {
+			auto colorChannel = generatableColorChannels.at(i);
+			log::info("color channel {} is in 'colorChannelIDs' : {}", colorChannel.targetChannelID, ranges::contains(colorChannelIDs, colorChannel.targetChannelID));
+
+			if (ranges::contains(colorChannelIDs, colorChannel.targetChannelID))
+				newGeneratableColorChannels.push_back(colorChannel);
+		}
+
+		return newGeneratableColorChannels;
+	} else {
+		return generatableColorChannels;
+	}
 }
 
-int MyLevelEditorLayer::genColorTriggers(GameObject* center, CCPoint offset, GeneratorOptions options) {	
+size_t MyLevelEditorLayer::genColorTriggers(GameObject* center, CCPoint offset, GeneratorOptions options) {	
 	const CCPoint originalOffset = offset;
 	const int64_t forEachTriggers = Mod::get()->getSettingValue<int64_t>("for-each-triggers");
 	const auto editorUI = this->m_editorUI;
@@ -64,23 +112,23 @@ int MyLevelEditorLayer::genColorTriggers(GameObject* center, CCPoint offset, Gen
 		return 0;
 	}
 
-	auto generatableColorChannels = getGeneratableColorChannels(colorChannels.value(), options.m_parseBuiltinColorChannels);
+	auto generatableColorChannels = getGeneratableColorChannels(colorChannels.value(), options);
 	int colorChannelsNum = generatableColorChannels.size();
 
 	float prettifyXoffset;
-	int numColumns = ceil(static_cast<double>(colorChannelsNum) / static_cast<double>(forEachTriggers));
+	int numColumns = std::ceil(static_cast<double>(colorChannelsNum) / static_cast<double>(forEachTriggers));
 	if (numColumns > 0) {
 		prettifyXoffset = 15 * (numColumns - 1);
 		log::debug("prettifyXoffset = {}", prettifyXoffset);
 
 		offset.x -= prettifyXoffset;
 	} else {
-		log::debug("numColumns < 0");
+		log::debug("numColumns <= 0");
 	}
 	
 	int i = 1;
 	CCArrayExt<EffectGameObject> objects;
-	for (const auto &colorTriggerContent : generatableColorChannels) {
+	for (const auto& colorTriggerContent : generatableColorChannels) {
 		auto obj = static_cast<EffectGameObject*>(createObject(COLOR_TRIGGER_OBJ_ID, offset, false));
 		
 		colorChannelsParser::colorTriggerContentToColorTrigger(obj, colorTriggerContent, Mod::get()->getSettingValue<bool>("use-legacy-hsv"));
