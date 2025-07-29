@@ -189,7 +189,7 @@ std::string MyEditorUI::createWaitingForSelectionNotifText() {
 		#ifdef GEODE_IS_DESKTOP
 		ret = fmt::format("Please select objects and then press '{}' again", bindAsString("genColorTriggers"_spr));
 		#else
-		ret = "Please select objects and then press the editor button again" // Shouldn't happen, but just in case
+		ret = "Please select objects and then press the editor button again"; // Shouldn't happen, but just in case
 		#endif
 	}
 
