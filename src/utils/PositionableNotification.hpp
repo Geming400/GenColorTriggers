@@ -36,7 +36,7 @@ struct Alignement {
 
 class PositionableNotification : public Notification {
     protected:
-        static CCArray* s_queue;
+        static CCArray* s_queue; // We use a different queue than `geode::Notification::s_queue`
         bool m_keepAcrossSceneChanges = true;
 
         void showNextNotification();
@@ -113,9 +113,6 @@ class PositionableNotification : public Notification {
         void wait();
         void setTime(float time);
         void waitAndHide();
-
-        bool getKeepAcrossSceneChanges();
-        void setKeepAcrossSceneChanges(bool value);
 
         void setTimeMember(float time);
 };

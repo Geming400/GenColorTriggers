@@ -14,7 +14,7 @@ std::string bindAsString(std::string bindID, size_t defaultIndex = 0) {
 
 	return strBind;
 	#else
-	return "MOBILE USER, NO KEYBIND";
+	return "MOBILE USER, NO KEYBIND"; // should never get called, but once again, just in case
 	#endif
 }
 
@@ -91,7 +91,6 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 		m_fields->m_centerBlock = selectedObjects[0];
 
 		if (Mod::get()->getSettingValue<bool>("show-ui")) {
-			PositionableNotification::create("TEST")->show(Alignement(MIDDLE, CENTER));
 			m_fields->m_genUI = ColorTriggerGenUI::create(GeneratorOptions::fromSettingValues(), [this](const GeneratorOptions options) {
 				if (options.m_genForSelectedObjects) {
 					m_fields->m_genOptions = options;
@@ -180,7 +179,7 @@ PositionableNotification* MyEditorUI::createWaitingForSelectionNotif() {
 		NotificationIcon::Info,
 		0
 	);
-	//notif->setKeepAcrossSceneChanges(false);
+
 	notif->setID("waiting-for-selection-notification"_spr);
 	notif->retain();
 

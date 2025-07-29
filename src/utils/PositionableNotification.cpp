@@ -17,8 +17,8 @@ void PositionableNotification::showNextNotification() {
         s_queue = CCArray::create();
         s_queue->retain();
     }
-    if (m_keepAcrossSceneChanges)
-        SceneManager::get()->forget(this);
+
+    SceneManager::get()->forget(this);
     // remove self from front of queue
     s_queue->removeFirstObject();
     if (auto obj = s_queue->firstObject()) {
@@ -50,9 +50,7 @@ void PositionableNotification::show(CCPoint pos) {
             this->setZOrder(CCScene::get()->getChildrenCount() > 0 ? CCScene::get()->getHighestChildZ() + 100 : 100);
         }
         
-        log::info("m_keepAcrossSceneChanges = {}", m_keepAcrossSceneChanges);
-        if (m_keepAcrossSceneChanges)
-            SceneManager::get()->keepAcrossScenes(this);
+        SceneManager::get()->keepAcrossScenes(this);
         m_showing = true;
     }
 
@@ -151,9 +149,6 @@ CCPoint PositionableNotification::getMiddleScreenPos() {
     auto winSize = CCDirector::get()->getWinSize();
     return ccp(winSize.width / 2, winSize.height / 2);
 }
-
-bool PositionableNotification::getKeepAcrossSceneChanges() { return m_keepAcrossSceneChanges; }
-void PositionableNotification::setKeepAcrossSceneChanges(bool value) { m_keepAcrossSceneChanges = value; }
 
 void PositionableNotification::setTimeMember(float time) {
     m_time = time;
