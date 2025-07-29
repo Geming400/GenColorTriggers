@@ -123,6 +123,8 @@ bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 
 	m_fields->m_waitingForSelectionNotification = createWaitingForSelectionNotif();
 
+	PositionableNotification::create("TEST")->show(Alignement(MIDDLE, TOP));
+
 	if (Mod::get()->getSavedValue<bool>("first-time-loading", true)) { // if their are going into the editor for the first time after installing this then show a popup
 		Mod::get()->setSavedValue<bool>("first-time-loading", false);
 
