@@ -11,6 +11,7 @@ void PositionableNotification::cancel() {
 }
 
 void PositionableNotification::showNextNotification() {
+    log::info("PositionableNotification::showNextNotification()");
     m_showing = false;
     if (!s_queue) {
         s_queue = CCArray::create();
@@ -27,22 +28,29 @@ void PositionableNotification::showNextNotification() {
 }
 
 void PositionableNotification::show(CCPoint pos) {
+    log::info("Showing notif");
     if (!s_queue) {
+        log::info("creating 's_queue' array");
         s_queue = CCArray::create();
         s_queue->retain();
     }
+    log::info("m_showing = {}", m_showing);
     if (!m_showing) {
+        log::info("s_queue->containsObject(this) = {}", s_queue->containsObject(this));
         if (!s_queue->containsObject(this)) {
             s_queue->addObject(this);
         }
+        log::info("s_queue->firstObject() != this = {}", s_queue->firstObject() != this);
         if (s_queue->firstObject() != this) {
             return;
         }
+        log::info("!this->getParent() = {}", !this->getParent());
         if (!this->getParent()) {
             this->setPosition(pos);
             this->setZOrder(CCScene::get()->getChildrenCount() > 0 ? CCScene::get()->getHighestChildZ() + 100 : 100);
         }
         
+        log::info("m_keepAcrossSceneChanges = {}", m_keepAcrossSceneChanges);
         if (m_keepAcrossSceneChanges)
             SceneManager::get()->keepAcrossScenes(this);
         m_showing = true;

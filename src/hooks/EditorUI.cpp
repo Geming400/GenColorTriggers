@@ -91,7 +91,7 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 		m_fields->m_centerBlock = selectedObjects[0];
 
 		if (Mod::get()->getSettingValue<bool>("show-ui")) {
-			PositionableNotification::create("TEST")->show(Alignement(MIDDLE, TOP));
+			PositionableNotification::create("TEST")->show(Alignement(MIDDLE, CENTER));
 			m_fields->m_genUI = ColorTriggerGenUI::create(GeneratorOptions::fromSettingValues(), [this](const GeneratorOptions options) {
 				if (options.m_genForSelectedObjects) {
 					m_fields->m_genOptions = options;
