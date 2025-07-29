@@ -11,7 +11,6 @@ void PositionableNotification::cancel() {
 }
 
 void PositionableNotification::showNextNotification() {
-    log::info("PositionableNotification::showNextNotification()");
     m_showing = false;
     if (!s_queue) {
         s_queue = CCArray::create();
@@ -30,21 +29,16 @@ void PositionableNotification::showNextNotification() {
 void PositionableNotification::show(CCPoint pos) {
     log::info("Showing notif");
     if (!s_queue) {
-        log::info("creating 's_queue' array");
         s_queue = CCArray::create();
         s_queue->retain();
     }
-    log::info("m_showing = {}", m_showing);
     if (!m_showing) {
-        log::info("s_queue->containsObject(this) = {}", s_queue->containsObject(this));
         if (!s_queue->containsObject(this)) {
             s_queue->addObject(this);
         }
-        log::info("s_queue->firstObject() != this = {}", s_queue->firstObject() != this);
         if (s_queue->firstObject() != this) {
             return;
         }
-        log::info("!this->getParent() = {}", !this->getParent());
         if (!this->getParent()) {
             this->setPosition(pos);
             this->setZOrder(CCScene::get()->getChildrenCount() > 0 ? CCScene::get()->getHighestChildZ() + 100 : 100);
@@ -97,7 +91,6 @@ void PositionableNotification::show() {
 }
 
 void PositionableNotification::hide() {
-    log::info("PositionableNotification::hide()");
     this->stopAllActions();
     this->runAction(CCSequence::create(
         CCCallFunc::create(this, callfunc_selector(PositionableNotification::animateOut)),
@@ -109,7 +102,6 @@ void PositionableNotification::hide() {
 }
 
 void PositionableNotification::animateIn() {
-    log::info("PositionableNotification::animateIn()");
     m_label->setOpacity(0);
     if (m_icon) {
         m_icon->setOpacity(0);
@@ -123,7 +115,6 @@ void PositionableNotification::animateIn() {
 }
 
 void PositionableNotification::wait() {
-    log::info("PositionableNotification::wait()");
     this->stopAllActions();
     if (m_time) {
         log::info("m_time = {}", m_time);
@@ -132,12 +123,9 @@ void PositionableNotification::wait() {
             CCCallFunc::create(this, callfunc_selector(PositionableNotification::hide)),
             nullptr
         ));
-    } else {
-        log::info("m_time = NOT SET");
     }
 }
 void PositionableNotification::setTime(float time) {
-    log::info("PositionableNotification::setTime()");
     m_time = time;
     this->wait();
 }
