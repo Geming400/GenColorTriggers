@@ -85,7 +85,6 @@ std::vector<modUtils::ColorTriggerContent> MyLevelEditorLayer::getGeneratableCol
 
 		for (size_t i = 0; i < generatableColorChannels.size(); i++) {
 			auto colorChannel = generatableColorChannels.at(i);
-			log::info("color channel {} is in 'colorChannelIDs' : {}", colorChannel.targetChannelID, ranges::contains(colorChannelIDs, colorChannel.targetChannelID));
 
 			if (ranges::contains(colorChannelIDs, colorChannel.targetChannelID))
 				newGeneratableColorChannels.push_back(colorChannel);
