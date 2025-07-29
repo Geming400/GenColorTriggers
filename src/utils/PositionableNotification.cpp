@@ -111,6 +111,7 @@ void PositionableNotification::hide() {
 }
 
 void PositionableNotification::animateIn() {
+    log::info("PositionableNotification::animateIn()");
     m_label->setOpacity(0);
     if (m_icon) {
         m_icon->setOpacity(0);
