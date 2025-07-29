@@ -98,6 +98,8 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 
 					m_fields->m_waitingForSelectionNotification->stopAllActions();
 					m_fields->m_waitingForSelectionNotification->setTimeMember(0.f);
+					m_fields->m_waitingForSelectionNotification->setString(MyEditorUI::createWaitingForSelectionNotifText());
+					m_fields->m_waitingForSelectionNotification->setIcon(NotificationIcon::Info);
 					m_fields->m_waitingForSelectionNotification->show(Alignement(MIDDLE, TOP));
 				} else {
 					generateColorTriggers(options);
