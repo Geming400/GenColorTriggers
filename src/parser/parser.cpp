@@ -7,12 +7,14 @@
 #define MAP_HAS_COLOR_PROPERTY(map, property) map.contains(fmt::to_string((int) property))
 #define PROPERTY_TO_STRING(property) static_cast<std::string>(fmt::to_string((int) property))
 
-// TO_<TYPE>
+// TO_<TYPE> macros
+
 #define PROPERTY_VALUE_TO_STRING(map, property) map[PROPERTY_TO_STRING(property)]
 // Here we can always assume that the unwrapped values are valid because we already checked if they existed before
 // We still use `unwrapOr` just in case but it shouldn't be needed (normally)
+// Aka: I don't wanna get killed by an index staff :3
 #define PROPERTY_VALUE_TO_INT(map, property) utils::numFromString<int>(PROPERTY_VALUE_TO_STRING(map, property)).unwrapOr(0)
-#define PROPERTY_VALUE_TO_FLOAT(map, property) utils::numFromString<float>(PROPERTY_VALUE_TO_STRING(map, property)).unwrapOr(0)
+#define PROPERTY_VALUE_TO_FLOAT(map, property) utils::numFromString<float>(PROPERTY_VALUE_TO_STRING(map, property)).unwrapOr(0.f)
 // #define PROPERTY_VALUE_TO_BOOL(map, property) PROPERTY_VALUE_TO_INT(map, property) == 1
 #define PROPERTY_VALUE_TO_BOOL(map, property) static_cast<bool>(PROPERTY_VALUE_TO_INT(map, property))
 #define PROPERTY_VALUE_TO_HSV(map, property) colorChannelsParser::rawHSVtoHSVValue(PROPERTY_VALUE_TO_STRING(map, property))
@@ -67,6 +69,7 @@ std::optional<modUtils::ColorTriggerContent> colorChannelsParser::rawColorChanne
     }
 
     // m_fromColor
+    // aka: the color of the color channel
 
     if (MAP_PROPERTY_VALUE_CHECK(colorProperties, ColorString::FROM_RED)) {
         int color = PROPERTY_VALUE_TO_INT(colorProperties, ColorString::FROM_RED);
