@@ -1,3 +1,7 @@
+# v1.1.1
+
+- Fixed a bug where the "Waiting for selection" notification would still appear even after quitting the editor
+
 # v1.1.0
 
 - Added "Color trigger generator options" gui
