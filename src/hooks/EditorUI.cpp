@@ -30,7 +30,6 @@ void MyEditorUI::generateColorTriggers(const GeneratorOptions options) {
 	double offset_x = options.m_offsetX;
 	double offset_y = options.m_offsetY;
 
-	// TODO: Make the ui show and link everything possible from `GeneratorOptions` in here
 	if (options.m_useGdGridSpace) {
 		offset_x = modUtils::coordinateToGDgridPos(offset_x, false);
 		offset_y = modUtils::coordinateToGDgridPos(offset_y, false);
@@ -85,20 +84,24 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 
 		m_fields->m_centerBlock = selectedObjects[0];
 
-		m_fields->m_genUI = ColorTriggerGenUI::create(GeneratorOptions::fromSettingValues(), [this](const GeneratorOptions options) {
-			if (options.m_genForSelectedObjects) {
-				m_fields->m_genOptions = options;
-				this->deselectAll();
+		if (Mod::get()->getSettingValue<bool>("show-ui")) {
+			m_fields->m_genUI = ColorTriggerGenUI::create(GeneratorOptions::fromSettingValues(), [this](const GeneratorOptions options) {
+				if (options.m_genForSelectedObjects) {
+					m_fields->m_genOptions = options;
+					this->deselectAll();
 
-				log::info("m_fields->m_waitingForSelectionNotification == nullptr: {}", m_fields->m_waitingForSelectionNotification == nullptr ? true : false);
-				m_fields->m_waitingForSelectionNotification->stopAllActions();
-				m_fields->m_waitingForSelectionNotification->show(Alignement(MIDDLE, TOP));
-				log::info("m_fields->m_waitingForSelectionNotification == nullptr: {}", m_fields->m_waitingForSelectionNotification == nullptr ? true : false);
-			} else {
-				generateColorTriggers(options);
-			}
-		});
-		m_fields->m_genUI->show();
+					log::info("m_fields->m_waitingForSelectionNotification == nullptr: {}", m_fields->m_waitingForSelectionNotification == nullptr ? true : false);
+					m_fields->m_waitingForSelectionNotification->stopAllActions();
+					m_fields->m_waitingForSelectionNotification->show(Alignement(MIDDLE, TOP));
+					log::info("m_fields->m_waitingForSelectionNotification == nullptr: {}", m_fields->m_waitingForSelectionNotification == nullptr ? true : false);
+				} else {
+					generateColorTriggers(options);
+				}
+			});
+			m_fields->m_genUI->show();
+		} else {
+			generateColorTriggers(GeneratorOptions::fromSettingValues());
+		}
 	} else {
 		if (selectedObjects.size() == 0) {
 			Notification::create("You must select at least 1 object!", NotificationIcon::Error)->show();

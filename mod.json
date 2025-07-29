@@ -8,7 +8,7 @@
 	},
 	"id": "geming400.gen-color-triggers",
 	"name": "Gen color triggers",
-	"version": "v1.0.4",
+	"version": "v1.1.0",
 	"developer": "Geming400",
 	"description": "Generate color triggers for each color channels",
 	"links": {
@@ -30,6 +30,12 @@
 		"general-title": {
 			"name": "General",
 			"type": "title"
+		},
+		"show-ui": {
+			"name": "Show UI",
+			"type": "bool",
+			"default": true,
+			"description": "Will the UI show ? If no, the generator options will be picked from those settings"
 		},
 		"include-builtin-color-channels": {
 			"name": "Include built-in color channels",
