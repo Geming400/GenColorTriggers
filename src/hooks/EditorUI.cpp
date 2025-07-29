@@ -201,14 +201,3 @@ std::string MyEditorUI::createWaitingForSelectionNotifText() {
 
 	return ret;
 }
-
-// No need to compile that on mobile since that setting
-// doesn't exist on mobile
-#ifdef GEODE_IS_DESKTOP
-$execute {
-    listenForSettingChanges("show-editor-button", [](bool value) {
-        MyEditorUI* editorUI = static_cast<MyEditorUI*>(EditorUI::get());
-		if (editorUI) editorUI->m_fields->m_waitingForSelectionNotification->setString(MyEditorUI::createWaitingForSelectionNotifText());
-    });
-}
-#endif
