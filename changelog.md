@@ -3,6 +3,7 @@
 - Added "Color trigger generator options" gui
 - Removed "Show 'parsing level' notification" option
 - Made the keybind not repeatable
+- Now accepting `P1` and `P2` **built-in** colors
 
 # v1.0.4
 

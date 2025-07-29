@@ -19,7 +19,9 @@ const std::vector<int> allowedCustomColors = {
 	(int) CustomColors::OBJ,
 	(int) CustomColors::LBG,
 	(int) CustomColors::MG,
-	(int) CustomColors::MG2
+	(int) CustomColors::MG2,
+	(int) CustomColors::P1,
+	(int) CustomColors::P2
 };
 
 /* For debugging:
@@ -42,10 +44,11 @@ void printVector(std::vector<modUtils::ColorTriggerContent> vec) {
 }
 */
 
-std::vector<modUtils::ColorTriggerContent> MyLevelEditorLayer::getGeneratableColorChannels(std::vector<modUtils::ColorTriggerContent> colorChannels, bool includeBuiltInColorChannels) {
+std::vector<modUtils::ColorTriggerContent> MyLevelEditorLayer::getGeneratableColorChannels(std::vector<modUtils::ColorTriggerContent> colorChannels, GeneratorOptions options) {
+	// 1
 	std::vector<modUtils::ColorTriggerContent> generatableColorChannels;
 	for (const auto &colorTriggerContent : colorChannels) {
-		if (includeBuiltInColorChannels) {
+		if (options.m_parseBuiltinColorChannels) {
 			if (!modUtils::isInVector(allowedCustomColors, colorTriggerContent.targetChannelID) && colorTriggerContent.targetChannelID >= 1000) { continue; }
 		} else {
 			if (colorTriggerContent.targetChannelID >= 1000) { continue; }
@@ -54,13 +57,9 @@ std::vector<modUtils::ColorTriggerContent> MyLevelEditorLayer::getGeneratableCol
 		generatableColorChannels.push_back(colorTriggerContent);
 	}
 
-	generatableColorChannels.shrink_to_fit();
-	return generatableColorChannels;
-}
 
-std::vector<modUtils::ColorTriggerContent> MyLevelEditorLayer::getGeneratableColorChannels(std::vector<modUtils::ColorTriggerContent> colorChannels, GeneratorOptions options) {
+	// 2
 	std::unordered_set<unsigned int> colorChannelIDs;
-	std::vector<modUtils::ColorTriggerContent> generatableColorChannels = getGeneratableColorChannels(colorChannels, options.m_parseBuiltinColorChannels);
 
 	auto selectedObjects = CCArrayExt<GameObject>(m_editorUI->getSelectedObjects());
 
