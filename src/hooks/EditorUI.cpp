@@ -14,51 +14,6 @@ std::string bindAsString(std::string bindID, size_t defaultIndex = 0) {
 	return strBind;
 }
 
-// Just using as a reference
-void MyEditorUI::onGenerateColorTriggers_old(CCObject*) {
-	if (!m_editorLayer) { // Really NEVER should happen but idk
-		log::error("The editor layer wasn't found ??");
-		Notification::create("The editor layer wasn't found ??", NotificationIcon::Error)->show();
-
-		return;
-	}
-
-	auto selectedObjects = CCArrayExt<GameObject>(this->getSelectedObjects());
-
-	if (selectedObjects.size() == 1) {
-		GameObject* obj = selectedObjects[0];
-		
-		CCPoint offset = obj->getPosition();
-
-		double offset_x = Mod::get()->getSettingValue<double>("offset-x");
-		double offset_y = Mod::get()->getSettingValue<double>("offset-y");
-
-		// TODO: Make the ui show and link everything possible from `GeneratorOptions` in here
-		if (Mod::get()->getSettingValue<bool>("use-gd-grid-space")) {
-			offset_x = modUtils::coordinateToGDgridPos(offset_x, false);
-			offset_y = modUtils::coordinateToGDgridPos(offset_y, false);
-		}
-
-		offset.x += offset_x;
-		offset.y += offset_y;
-
-		int colorTriggersNum = static_cast<MyLevelEditorLayer*>(m_editorLayer)->genColorTriggers(selectedObjects[0], offset, GeneratorOptions::fromSettingValues());
-		if (colorTriggersNum == 0) {
-			log::warn("Created 0 color triggers.");
-			Notification::create("Created 0 color triggers.", NotificationIcon::Warning)->show(); // Isn't supposed to happen since there are the bg colors, etc...
-		} else {
-			std::string colorTriggersNumStr = colorTriggersNum >= vectorSizePushLimit ? fmt::format("{}+", colorTriggersNum) : fmt::to_string(colorTriggersNum);
-			Notification::create(fmt::format("Sucessfully generated {} color triggers!", colorTriggersNumStr), NotificationIcon::Success)->show();
-		}
-	} else {
-		if (selectedObjects.size() == 0) {
-			Notification::create("You must select at least 1 object!", NotificationIcon::Error)->show();
-		} else {
-			Notification::create("You must select only 1 object!", NotificationIcon::Error)->show();
-		}
-	}
-}
-
 void MyEditorUI::generateColorTriggers(const GeneratorOptions options) {
 	m_fields->m_genOptions = std::nullopt;
 
@@ -72,8 +27,8 @@ void MyEditorUI::generateColorTriggers(const GeneratorOptions options) {
 
 	CCPoint offset = centerBlock->getPosition();
 
-	double offset_x = Mod::get()->getSettingValue<double>("offset-x");
-	double offset_y = Mod::get()->getSettingValue<double>("offset-y");
+	double offset_x = options.m_offsetX;
+	double offset_y = options.m_offsetY;
 
 	// TODO: Make the ui show and link everything possible from `GeneratorOptions` in here
 	if (options.m_useGdGridSpace) {
