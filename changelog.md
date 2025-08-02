@@ -1,3 +1,7 @@
+# v1.1.3
+
+Made `Custom Keybinds` only a dependency on mac and windows (aka desktop)
+
 # v1.1.2
 
 - Changed the default keybind from `F10` to `F9` because devtools uses `F10` as a default keybind on **MacOS**

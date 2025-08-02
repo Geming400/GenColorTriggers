@@ -8,7 +8,7 @@
 	},
 	"id": "geming400.gen-color-triggers",
 	"name": "Gen color triggers",
-	"version": "v1.1.2",
+	"version": "v1.1.3",
 	"developer": "Geming400",
 	"description": "Generate color triggers for each color channels",
 	"links": {
@@ -103,7 +103,11 @@
 			}
 		}
 	},
-	"dependencies": {
-		"geode.custom-keybinds": ">=v1.1.0"
+    "dependencies": {
+        "geode.custom-keybinds": {
+            "version": "v1.1.0",
+            "importance": "required",
+			"platforms": ["win", "mac"]
+        }
 	}
 }
