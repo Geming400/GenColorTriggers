@@ -1,6 +1,10 @@
+# v1.1.4
+
+- Fixed a popup possibly showing on mobile when it shouldn't
+
 # v1.1.3
 
-Made `Custom Keybinds` only a dependency on mac and windows (aka desktop)
+- Made `Custom Keybinds` only a dependency on mac and windows (aka desktop)
 
 # v1.1.2
 

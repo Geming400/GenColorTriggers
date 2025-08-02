@@ -128,7 +128,8 @@ bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 
 		FLAlertLayer* alert;
 
-		if (Mod::get()->getSettingValue<bool>("show-editor-button")) {
+		#ifdef GEODE_IS_DESKTOP
+		if (Mod::get()->getSavedValue<bool>("show-editor-button")) {
 			alert = FLAlertLayer::create("Hello!", "To generate color triggers please go to the 'edit' tab.", "Dismiss");
 		} else {
 			alert = FLAlertLayer::create(
@@ -137,6 +138,9 @@ bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 				"Dismiss"
 			);
 		}
+		#else
+		alert = FLAlertLayer::create("Hello!", "To generate color triggers please go to the 'edit' tab.", "Dismiss");
+		#endif
 
 		alert->m_scene = this;
 		alert->show();
