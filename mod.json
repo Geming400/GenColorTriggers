@@ -8,7 +8,7 @@
 	},
 	"id": "geming400.gen-color-triggers",
 	"name": "Gen color triggers",
-	"version": "v1.1.1",
+	"version": "v1.1.2",
 	"developer": "Geming400",
 	"description": "Generate color triggers for each color channels",
 	"links": {

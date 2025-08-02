@@ -1,3 +1,7 @@
+# v1.1.2
+
+- Changed the default keybind from `F10` to `F9` because devtools uses `F10` as a default keybind on **MacOS**
+
 # v1.1.1
 
 - Fixed a bug where the "Waiting for selection" notification would still appear even after quitting the editor

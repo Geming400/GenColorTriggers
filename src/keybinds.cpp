@@ -15,7 +15,7 @@ $execute {
         // Description, leave empty for none
         "Generate color triggers for every channels",
         // Default binds
-        { Keybind::create(KEY_F10, Modifier::None) },
+        { Keybind::create(KEY_F9, Modifier::None) },
         // Category; use slashes for specifying subcategories. See the
         // Category class for default categories
         Category::EDITOR,
