@@ -1,8 +1,8 @@
+#ifdef GEODE_IS_DESKTOP
 #include <Geode/Geode.hpp>
 
 using namespace geode::prelude;
 
-#ifdef GEODE_IS_DESKTOP
 #include <geode.custom-keybinds/include/Keybinds.hpp>
 using namespace keybinds;
 
