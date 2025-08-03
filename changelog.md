@@ -1,3 +1,8 @@
+# v1.1.5
+
+- Fixed that in the `waiting for selection` notification the keybind showed was the **default keybind** and not the currently set **keybind**
+- Also fixed that the `Generated x color triggers` notification would show with the text `Generated 0 color triggers !!! (Should NOT happen btw)` even tho this should happen because of the <cb>`Generate only for selected objects`</cb> generator setting.
+
 # v1.1.4
 
 - Fixed a popup possibly showing on mobile when it shouldn't
