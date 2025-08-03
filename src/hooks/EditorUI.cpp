@@ -9,12 +9,17 @@ using namespace keybinds;
 
 std::string bindAsString(std::string bindID, size_t defaultIndex = 0) {
 	#ifdef GEODE_IS_DESKTOP
+
+	std::string strBind = BindManager::get()->getBindsFor(bindID)[defaultIndex]->toString();
+    
+	/*
 	auto bind = BindManager::get()->getBindable(bindID);
 	std::string strBind = (*bind).getDefaults()[defaultIndex]->toString();
+	*/
 
 	return strBind;
 	#else
-	return "MOBILE USER, NO KEYBIND"; // should never get called, but once again, just in case
+	return "press the button in the edit tab"; // should never get called, but once again, just in case
 	#endif
 }
 
@@ -43,12 +48,16 @@ void MyEditorUI::generateColorTriggers(const GeneratorOptions options) {
 	offset.y += offset_y;
 
 	size_t colorTriggersNum = static_cast<MyLevelEditorLayer*>(m_editorLayer)->genColorTriggers(centerBlock, offset, options);
-	if (colorTriggersNum == 0) { // Isn't supposed to happen since there are the bg colors, etc...
+	if (colorTriggersNum == 0 && !options.m_genForSelectedObjects) { // Isn't supposed to happen since there are the bg colors, etc...
 		log::warn("Generated 0 color triggers.");
 		Notification::create("Generated 0 color triggers !!! (This is NOT supposed to happen)", NotificationIcon::Warning)->show();
-	} else {
+	} else if (!options.m_genForSelectedObjects) {
 		std::string colorTriggersNumStr = colorTriggersNum >= vectorSizePushLimit ? fmt::format("{}+", colorTriggersNum) : fmt::to_string(colorTriggersNum);
 		Notification::create(fmt::format("Sucessfully generated {} color triggers!", colorTriggersNumStr), NotificationIcon::Success)->show();
+	} else {
+		auto notif = Notification::create("Generated 0 color triggers (The objects hadn't any color data)", NotificationIcon::Info);
+		notif->setScale(.7f);
+		notif->show();
 	}
 }
 
@@ -193,15 +202,15 @@ PositionableNotification* MyEditorUI::createWaitingForSelectionNotif() {
 std::string MyEditorUI::createWaitingForSelectionNotifText() {
 	std::string ret;
 
+	#ifdef GEODE_IS_DESKTOP
 	if (Mod::get()->getSavedValue<bool>("show-editor-button")) {
 		ret = "Please select objects and then press the editor button again";
 	} else {
-		#ifdef GEODE_IS_DESKTOP
 		ret = fmt::format("Please select objects and then press '{}' again", bindAsString("genColorTriggers"_spr));
-		#else
-		ret = "Please select objects and then press the editor button again"; // Shouldn't happen, but just in case
-		#endif
 	}
+	#else
+	ret = "Please select objects and then press the editor button again";
+	#endif 
 
 	return ret;
 }
