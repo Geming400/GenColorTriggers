@@ -55,6 +55,7 @@ void MyEditorUI::generateColorTriggers(const GeneratorOptions options) {
 		std::string colorTriggersNumStr = colorTriggersNum >= vectorSizePushLimit ? fmt::format("{}+", colorTriggersNum) : fmt::to_string(colorTriggersNum);
 		Notification::create(fmt::format("Sucessfully generated {} color triggers!", colorTriggersNumStr), NotificationIcon::Success)->show();
 	} else {
+		log::info("Generated 0 color triggers (The objects hadn't any color data, so this should be normal)");
 		auto notif = Notification::create("Generated 0 color triggers (The objects hadn't any color data)", NotificationIcon::Info);
 		notif->setScale(.7f);
 		notif->show();
