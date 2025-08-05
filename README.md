@@ -2,6 +2,8 @@
 
 This is where she makes a mod.
 
+Literally made because nwo can't use custom keybinds on mac :3
+
 <img src="logo.png" width="150" alt="the mod's logo" />
 
 This mod will let you be able to generate color triggers for every channels in the level.
