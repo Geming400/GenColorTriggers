@@ -43,13 +43,6 @@
 			"default": true,
 			"description": "Will the color channels for the BG, G, MG, etc... will be included in the generated triggers as well"
 		},
-		"show-editor-button": {
-			"name": "Show editor button",
-			"type": "bool",
-			"default": false,
-			"platforms": ["desktop"],
-			"description": "Used to make a button appear in the 'edit' tab of the editor. This is enabled by default on mobile"
-		},
 		"use-legacy-hsv" : {
 			"name": "Use legacy HSV",
 			"type": "bool",
@@ -102,12 +95,5 @@
 				"big-arrow-step": 5
 			}
 		}
-	},
-    "dependencies": {
-        "geode.custom-keybinds": {
-            "version": "v1.1.0",
-            "importance": "required",
-			"platforms": ["win", "mac"]
-        }
 	}
 }

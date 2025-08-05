@@ -2,27 +2,6 @@
 
 #include "LevelEditorLayer.hpp"
 
-#ifdef GEODE_IS_DESKTOP
-#include <geode.custom-keybinds/include/Keybinds.hpp>
-using namespace keybinds;
-#endif
-
-std::string bindAsString(std::string bindID, size_t defaultIndex = 0) {
-	#ifdef GEODE_IS_DESKTOP
-
-	std::string strBind = BindManager::get()->getBindsFor(bindID)[defaultIndex]->toString();
-    
-	/*
-	auto bind = BindManager::get()->getBindable(bindID);
-	std::string strBind = (*bind).getDefaults()[defaultIndex]->toString();
-	*/
-
-	return strBind;
-	#else
-	return "press the button in the edit tab"; // should never get called, but once again, just in case
-	#endif
-}
-
 void MyEditorUI::generateColorTriggers(const GeneratorOptions options) {
 	m_fields->m_genOptions = std::nullopt;
 
@@ -138,38 +117,13 @@ bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 
 		FLAlertLayer* alert;
 
-		#ifdef GEODE_IS_DESKTOP
-		if (Mod::get()->getSavedValue<bool>("show-editor-button")) {
-			alert = FLAlertLayer::create("Hello!", "To generate color triggers please go to the 'edit' tab.", "Dismiss");
-		} else {
-			alert = FLAlertLayer::create(
-				"Hello!",
-				fmt::format("To generate color triggers please press '{}'.", bindAsString("genColorTriggers"_spr)),
-				"Dismiss"
-			);
-		}
-		#else
 		alert = FLAlertLayer::create("Hello!", "To generate color triggers please go to the 'edit' tab.", "Dismiss");
-		#endif
 
 		alert->m_scene = this;
 		alert->show();
 	}
 
-	#ifdef GEODE_IS_DESKTOP
-	this->template addEventListener<InvokeBindFilter>([=](InvokeBindEvent* event) {
-		if (event->isDown()) {
-			onGenerateColorTriggers(nullptr);
-		}
-		// Return Propagate if you want other actions with the same bind to
-		// also be fired, or Stop if you want to halt propagation
-		return ListenerResult::Propagate;
-	}, "genColorTriggers"_spr);
-
-	log::info("Registered keybind 'genColorTriggers' !");
-	#else
-	log::info("User is on mobile, cannot register a keybind.");
-	#endif
+	log::info("User is on the 'no custom-keybind' branch, cannot register a keybind.");
 
 	return true;
 }
@@ -203,15 +157,7 @@ PositionableNotification* MyEditorUI::createWaitingForSelectionNotif() {
 std::string MyEditorUI::createWaitingForSelectionNotifText() {
 	std::string ret;
 
-	#ifdef GEODE_IS_DESKTOP
-	if (Mod::get()->getSavedValue<bool>("show-editor-button")) {
-		ret = "Please select objects and then press the editor button again";
-	} else {
-		ret = fmt::format("Please select objects and then press '{}' again", bindAsString("genColorTriggers"_spr));
-	}
-	#else
 	ret = "Please select objects and then press the editor button again";
-	#endif 
 
 	return ret;
 }
