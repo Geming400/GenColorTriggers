@@ -27,7 +27,6 @@ void PositionableNotification::showNextNotification() {
 }
 
 void PositionableNotification::show(CCPoint pos) {
-    log::info("Showing notif");
     if (!s_queue) {
         s_queue = CCArray::create();
         s_queue->retain();
@@ -117,7 +116,6 @@ void PositionableNotification::animateIn() {
 void PositionableNotification::wait() {
     this->stopAllActions();
     if (m_time) {
-        log::info("m_time = {}", m_time);
         this->runAction(CCSequence::create(
             CCDelayTime::create(m_time),
             CCCallFunc::create(this, callfunc_selector(PositionableNotification::hide)),
