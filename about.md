@@ -14,9 +14,9 @@ On <cb>**mobile**</cb> you will need to go to the <cy>edit tab</cy> and press th
 ---------
 
 There is also an UI that will show up whenever you press <cb>`F9`</cb> *(or the keybind you chose)* or the editor button.
-**This UI is synced and *not* synced to this mod's settings.**
+**This UI is synced and *not* synced to this mod's settings**:
 
-Whenever you open the UI, it will use the <cb>mod's settings value</cb>, but if you change at the same time while the <cb>**UI is opened**</cb> the mod's settings, the ui's generator options will **not** change.
+Whenever you open the UI, it will use the <cb>mod's settings value</cb>, but if you change at the same time the mod's settings while the <cb>**UI is opened**</cb>, the ui's generator options will **not** change.
 
 ---------
 
@@ -25,8 +25,8 @@ This is <cg>**enabled**</cg> by default !
 
 ## Why this mod ?
 
-This mod can be used to make collab merging a little bit more easily.
-This won't simply every aspect of merging parts of a collab, but can certainly make it easier.
+This mod can be used to make collab merging a little bit more easier.
+This won't simplify every aspect of merging parts in a collab, but can certainly make it easier.
 
 ## Credits
 
