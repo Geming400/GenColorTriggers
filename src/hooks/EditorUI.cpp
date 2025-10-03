@@ -4,8 +4,12 @@
 #include "LevelEditorLayer.hpp"
 #include "../utils/utils.hpp"
 
+#ifdef CAN_USE_CUSTOM_KEYBINDS
+
 #include <geode.custom-keybinds/include/OptionalAPI.hpp>
 using namespace keybinds;
+
+#endif
 
 std::string bindAsString(std::string bindID, size_t defaultIndex = 0) {
 	#ifdef CAN_USE_CUSTOM_KEYBINDS
@@ -167,6 +171,8 @@ bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 		alert->show();
 	}
 
+	#ifdef CAN_USE_CUSTOM_KEYBINDS
+
 	if (Loader::get()->isModInstalled(CUSTOM_KEYBINDS_MOD_ID)) {
 		this->addEventListener<InvokeBindFilterV2>([this](InvokeBindEventV2* event) {
 			if (event->isDown()) {
@@ -181,6 +187,12 @@ bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 	} else {
 		log::info("User doesn't have the ck mod installer, cannot register a keybind.");
 	}
+
+	#else
+
+	log::info("User is on mobile, cannot register a keybind.");
+
+	#endif
 
 	return true;
 }
