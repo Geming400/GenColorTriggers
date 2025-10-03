@@ -5,9 +5,11 @@
 using namespace geode::prelude;
 
 
-#ifdef GEODE_IS_DESKTOP
+#if defined(GEODE_IS_DESKTOP)
 #define CAN_USE_CUSTOM_KEYBINDS
 #endif
+
+#define CUSTOM_KEYBINDS_MOD_ID "geode.custom-keybinds"
 
 namespace modUtils {
     struct ColorTriggerContent {
