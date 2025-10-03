@@ -1,6 +1,9 @@
 #include <Geode/Geode.hpp>
+#include "utils/utils.hpp"
 
 using namespace geode::prelude;
+
+#ifdef CAN_USE_CUSTOM_KEYBINDS
 
 #include <geode.custom-keybinds/include/OptionalAPI.hpp>
 using namespace keybinds;
@@ -39,3 +42,5 @@ $execute {
         return Ok();
     }();
 }
+
+#endif
