@@ -1,7 +1,7 @@
 #include "LevelEditorLayer.hpp"
 #include "../parser/parser.hpp"
 #include "../utils/customColors.hpp"
-#include <cmath>
+#include <math.h>
 
 
 #define COLOR_TRIGGER_OBJ_ID 899

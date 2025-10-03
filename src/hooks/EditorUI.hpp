@@ -5,7 +5,6 @@ class ColorTriggerGenUI; // I am fucking going to kill myself because of those s
 
 #include <Geode/Geode.hpp>
 #include "../utils/PositionableNotification.hpp"
-#include "../utils/utils.hpp"
 #include "../ui/generatorOptions.hpp"
 #include "../ui/colorTriggerGeneratorUI.hpp"
 

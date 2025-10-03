@@ -1,7 +1,4 @@
-#pragma once
-
 #include <Geode/Geode.hpp>
-#include "../utils/PositionableNotification.hpp"
 #include "EditorUI.hpp"
 
 using namespace geode::prelude;
