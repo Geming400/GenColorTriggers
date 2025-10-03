@@ -8,10 +8,12 @@
 using namespace keybinds;
 
 std::string bindAsString(std::string bindID, size_t defaultIndex = 0) {
+	#ifdef CAN_USE_CUSTOM_KEYBINDS
+
 	if (Loader::get()->isModInstalled(CUSTOM_KEYBINDS_MOD_ID)) {
 		auto binds = BindManagerV2::getBindsFor(bindID);
 		if (binds) {
-			std::string strBind = BindManagerV2::getBindsFor(bindID).unwrap()[defaultIndex]->toString();
+			std::string strBind = binds.unwrap()[defaultIndex]->toString();
 
 			// std::string strBind = BindManager::get()->getBindsFor(bindID)[defaultIndex]->toString();
 			/*
@@ -26,7 +28,9 @@ std::string bindAsString(std::string bindID, size_t defaultIndex = 0) {
 		}
 	}
 
-	return "press the button in the edit tab"; // should never get called, but once again, just in case
+	#endif
+
+	return "press the button in the edit tab";
 }
 
 void MyEditorUI::generateColorTriggers(const GeneratorOptions options) {
