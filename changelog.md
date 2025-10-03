@@ -1,3 +1,7 @@
+# v1.1.6
+
+- Now using the optional [Custom Keybinds](https://geode-sdk.org/mods/geode.custom-keybinds) api (note: it's only available **on desktop**)
+
 # v1.1.5
 
 - Fixed that in the `waiting for selection` notification the keybind showed was the **default keybind** and not the currently set **keybind**
