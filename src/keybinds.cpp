@@ -2,8 +2,6 @@
 
 using namespace geode::prelude;
 
-#ifdef GEODE_IS_DESKTOP
-
 #include <geode.custom-keybinds/include/OptionalAPI.hpp>
 using namespace keybinds;
 
@@ -41,4 +39,3 @@ $execute {
         return Ok();
     }();
 }
-#endif
