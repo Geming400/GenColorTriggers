@@ -1,15 +1,23 @@
 #include <Geode/Geode.hpp>
+#include "./utils/utils.hpp"
 
 using namespace geode::prelude;
 
-#ifdef GEODE_IS_MOBILE
+#ifndef CAN_USE_CUSTOM_KEYBINDS
 $on_mod(Loaded) {
     Mod::get()->setSavedValue<bool>("show-editor-button", true);
 }
 #endif
 
-#ifdef GEODE_IS_DESKTOP
+#ifdef CAN_USE_CUSTOM_KEYBINDS
 $on_mod(Loaded) {
+    // Extra check if the user uninstalled CK but
+    // the 'show-editor-button' setting was disabled
+    if (!Loader::get()->isModLoaded(CUSTOM_KEYBINDS_MOD_ID)) {
+        Mod::get()->setSavedValue<bool>("show-editor-button", true);
+    }
+
+
     if (Mod::get()->getSavedValue<bool>("first-time-loading", true)) {
         Mod::get()->setSavedValue<bool>("show-editor-button", false);
     }
