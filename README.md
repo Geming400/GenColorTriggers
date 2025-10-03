@@ -11,4 +11,6 @@ This is **enabled** by default !
 
 ## Maybe Todo idk
 
-add a `Copy in clipboard` button ??
+- add a `Copy in clipboard` button ??
+- use the `getColorActions` member instead of a parser
+- Optional CK dependency
