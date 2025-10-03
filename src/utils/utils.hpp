@@ -4,6 +4,11 @@
 
 using namespace geode::prelude;
 
+
+#ifdef GEODE_IS_DESKTOP
+#define CAN_USE_CUSTOM_KEYBINDS
+#endif
+
 namespace modUtils {
     struct ColorTriggerContent {
         ColorAction* colorAction;

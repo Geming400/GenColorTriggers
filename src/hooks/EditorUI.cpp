@@ -1,26 +1,34 @@
 #include "EditorUI.hpp"
 
+#include "Geode/loader/Log.hpp"
 #include "LevelEditorLayer.hpp"
+#include "../utils/utils.hpp"
 
-#ifdef GEODE_IS_DESKTOP
-#include <geode.custom-keybinds/include/Keybinds.hpp>
+#ifdef CAN_USE_CUSTOM_KEYBINDS
+#include <geode.custom-keybinds/include/OptionalAPI.hpp>
 using namespace keybinds;
 #endif
 
 std::string bindAsString(std::string bindID, size_t defaultIndex = 0) {
-	#ifdef GEODE_IS_DESKTOP
+	if (Loader::get()->isModInstalled("geode.custom-keybinds")) {
+		auto binds = BindManagerV2::getBindsFor(bindID);
+		if (binds) {
+			std::string strBind = BindManagerV2::getBindsFor(bindID).unwrap()[defaultIndex]->toString();
 
-	std::string strBind = BindManager::get()->getBindsFor(bindID)[defaultIndex]->toString();
-    
-	/*
-	auto bind = BindManager::get()->getBindable(bindID);
-	std::string strBind = (*bind).getDefaults()[defaultIndex]->toString();
-	*/
+			// std::string strBind = BindManager::get()->getBindsFor(bindID)[defaultIndex]->toString();
+			/*
+			auto bind = BindManager::get()->getBindable(bindID);
+			std::string strBind = (*bind).getDefaults()[defaultIndex]->toString();
+			*/
 
-	return strBind;
-	#else
+			return strBind;
+		} else {
+			log::error("Wasn't able to get bind name from bindID {} (defaultIndex = {})", bindID, defaultIndex);
+			return "";
+		}
+	}
+
 	return "press the button in the edit tab"; // should never get called, but once again, just in case
-	#endif
 }
 
 void MyEditorUI::generateColorTriggers(const GeneratorOptions options) {
@@ -87,7 +95,7 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 			return;
 		}
 
-		generateColorTriggers(*m_fields->m_genOptions);
+		this->generateColorTriggers(*m_fields->m_genOptions);
 
 		return;
 	}
@@ -112,12 +120,12 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 					m_fields->m_waitingForSelectionNotification->setIcon(NotificationIcon::Info);
 					m_fields->m_waitingForSelectionNotification->show(Alignement(MIDDLE, TOP));
 				} else {
-					generateColorTriggers(options);
+					this->generateColorTriggers(options);
 				}
 			});
 			m_fields->m_genUI->show();
 		} else {
-			generateColorTriggers(GeneratorOptions::fromSettingValues());
+			this->generateColorTriggers(GeneratorOptions::fromSettingValues());
 		}
 	} else {
 		if (selectedObjects.size() == 0) {
@@ -138,7 +146,7 @@ bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 
 		FLAlertLayer* alert;
 
-		#ifdef GEODE_IS_DESKTOP
+		#ifdef CAN_USE_CUSTOM_KEYBINDS
 		if (Mod::get()->getSavedValue<bool>("show-editor-button")) {
 			alert = FLAlertLayer::create("Hello!", "To generate color triggers please go to the 'edit' tab.", "Dismiss");
 		} else {
@@ -156,8 +164,8 @@ bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 		alert->show();
 	}
 
-	#ifdef GEODE_IS_DESKTOP
-	this->template addEventListener<InvokeBindFilter>([=](InvokeBindEvent* event) {
+	#ifdef CAN_USE_CUSTOM_KEYBINDS
+	this->addEventListener<InvokeBindFilterV2>([this](InvokeBindEventV2* event) {
 		if (event->isDown()) {
 			onGenerateColorTriggers(nullptr);
 		}
@@ -203,7 +211,7 @@ PositionableNotification* MyEditorUI::createWaitingForSelectionNotif() {
 std::string MyEditorUI::createWaitingForSelectionNotifText() {
 	std::string ret;
 
-	#ifdef GEODE_IS_DESKTOP
+	#ifdef CAN_USE_CUSTOM_KEYBINDS
 	if (Mod::get()->getSavedValue<bool>("show-editor-button")) {
 		ret = "Please select objects and then press the editor button again";
 	} else {
