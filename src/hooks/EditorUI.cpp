@@ -4,13 +4,11 @@
 #include "LevelEditorLayer.hpp"
 #include "../utils/utils.hpp"
 
-#ifdef CAN_USE_CUSTOM_KEYBINDS
 #include <geode.custom-keybinds/include/OptionalAPI.hpp>
 using namespace keybinds;
-#endif
 
 std::string bindAsString(std::string bindID, size_t defaultIndex = 0) {
-	if (Loader::get()->isModInstalled("geode.custom-keybinds")) {
+	if (Loader::get()->isModInstalled(CUSTOM_KEYBINDS_MOD_ID)) {
 		auto binds = BindManagerV2::getBindsFor(bindID);
 		if (binds) {
 			std::string strBind = BindManagerV2::getBindsFor(bindID).unwrap()[defaultIndex]->toString();
@@ -101,6 +99,7 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 	}
 
 	if (selectedObjects.size() == 1) {
+		// If the popup is already opened, don't open it again
 		if (
 			m_editorLayer->getParent()->getChildByID(ColorTriggerGenUI::POPUP_ID) ||
 			m_editorLayer->getParent()->getChildByID("waiting-for-selection-notification"_spr)
@@ -146,38 +145,38 @@ bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 
 		FLAlertLayer* alert;
 
-		#ifdef CAN_USE_CUSTOM_KEYBINDS
-		if (Mod::get()->getSavedValue<bool>("show-editor-button")) {
-			alert = FLAlertLayer::create("Hello!", "To generate color triggers please go to the 'edit' tab.", "Dismiss");
+		if (Loader::get()->isModInstalled(CUSTOM_KEYBINDS_MOD_ID)) {
+			if (Mod::get()->getSavedValue<bool>("show-editor-button")) {
+				alert = FLAlertLayer::create("Hello!", "To generate color triggers please go to the 'edit' tab.", "Dismiss");
+			} else {
+				alert = FLAlertLayer::create(
+					"Hello!",
+					fmt::format("To generate color triggers please press '{}'.", bindAsString("genColorTriggers"_spr)),
+					"Dismiss"
+				);
+			}
 		} else {
-			alert = FLAlertLayer::create(
-				"Hello!",
-				fmt::format("To generate color triggers please press '{}'.", bindAsString("genColorTriggers"_spr)),
-				"Dismiss"
-			);
+			alert = FLAlertLayer::create("Hello!", "To generate color triggers please go to the 'edit' tab.", "Dismiss");
 		}
-		#else
-		alert = FLAlertLayer::create("Hello!", "To generate color triggers please go to the 'edit' tab.", "Dismiss");
-		#endif
 
 		alert->m_scene = this;
 		alert->show();
 	}
 
-	#ifdef CAN_USE_CUSTOM_KEYBINDS
-	this->addEventListener<InvokeBindFilterV2>([this](InvokeBindEventV2* event) {
-		if (event->isDown()) {
-			onGenerateColorTriggers(nullptr);
-		}
-		// Return Propagate if you want other actions with the same bind to
-		// also be fired, or Stop if you want to halt propagation
-		return ListenerResult::Propagate;
-	}, "genColorTriggers"_spr);
+	if (Loader::get()->isModInstalled(CUSTOM_KEYBINDS_MOD_ID)) {
+		this->addEventListener<InvokeBindFilterV2>([this](InvokeBindEventV2* event) {
+			if (event->isDown()) {
+				onGenerateColorTriggers(nullptr);
+			}
+			// Return Propagate if you want other actions with the same bind to
+			// also be fired, or Stop if you want to halt propagation
+			return ListenerResult::Propagate;
+		}, "genColorTriggers"_spr);
 
-	log::info("Registered keybind 'genColorTriggers' !");
-	#else
-	log::info("User is on mobile, cannot register a keybind.");
-	#endif
+		log::info("Registered keybind 'genColorTriggers' !");
+	} else {
+		log::info("User doesn't have the ck mod installer, cannot register a keybind.");
+	}
 
 	return true;
 }
@@ -197,7 +196,7 @@ void MyEditorUI::createMoveMenu() {
 
 PositionableNotification* MyEditorUI::createWaitingForSelectionNotif() {
 	auto notif = PositionableNotification::create(
-		createWaitingForSelectionNotifText(),
+		MyEditorUI::createWaitingForSelectionNotifText(),
 		NotificationIcon::Info,
 		0
 	);
@@ -211,15 +210,15 @@ PositionableNotification* MyEditorUI::createWaitingForSelectionNotif() {
 std::string MyEditorUI::createWaitingForSelectionNotifText() {
 	std::string ret;
 
-	#ifdef CAN_USE_CUSTOM_KEYBINDS
-	if (Mod::get()->getSavedValue<bool>("show-editor-button")) {
-		ret = "Please select objects and then press the editor button again";
+	if (Loader::get()->isModInstalled(CUSTOM_KEYBINDS_MOD_ID)) {
+		if (Mod::get()->getSavedValue<bool>("show-editor-button")) {
+			ret = "Please select objects and then press the editor button again";
+		} else {
+			ret = fmt::format("Please select objects and then press '{}' again", bindAsString("genColorTriggers"_spr));
+		}
 	} else {
-		ret = fmt::format("Please select objects and then press '{}' again", bindAsString("genColorTriggers"_spr));
+		ret = "Please select objects and then press the editor button again";
 	}
-	#else
-	ret = "Please select objects and then press the editor button again";
-	#endif 
 
 	return ret;
 }
