@@ -14,6 +14,6 @@ be accessible on mobile, which **I do not want**.
 
 ## Maybe Todo idk
 
-- [] add a `Copy in clipboard` button ??
-- [] use the `getColorActions` member instead of a parser
+- [ ] add a `Copy in clipboard` button ??
+- [ ] use the `getColorActions` member instead of a parser
 - [x] Optional CK dependency
