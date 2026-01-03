@@ -1,3 +1,7 @@
+# v1.1.7
+
+- Added a popup informing about the user still using the old keybind
+
 # v1.1.6
 
 - Now using the optional [Custom Keybinds](https://geode-sdk.org/mods/geode.custom-keybinds) api (note: it's only available **on desktop**)
@@ -17,7 +21,7 @@
 
 # v1.1.2
 
-- Changed the default keybind from `F10` to `F9` because devtools uses `F10` as a default keybind on **MacOS**
+- Changed the default keybind from `F10` to `F9` because [devtools](https://geode-sdk.org/mods/geode.devtools) uses `F10` as a default keybind on **MacOS**
 
 # v1.1.1
 

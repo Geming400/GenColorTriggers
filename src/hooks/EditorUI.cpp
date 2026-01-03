@@ -37,6 +37,12 @@ std::string bindAsString(std::string bindID, size_t defaultIndex = 0) {
 	return "press the button in the edit tab";
 }
 
+// stolen from https://github.com/geode-sdk/CustomKeybinds/blob/ba9cfc1562b19b52d52117b1f4b307e5868c7b60/src/Keybinds.cpp#L48-L49
+std::string keybindAsString(enumKeyCodes key) {
+	auto s = CCKeyboardDispatcher::get()->keyToString(key);
+	return (s != nullptr) ? s : "Unknown keybind";
+}
+
 void MyEditorUI::generateColorTriggers(const GeneratorOptions options) {
 	m_fields->m_genOptions = std::nullopt;
 
@@ -148,6 +154,8 @@ bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 
 	m_fields->m_waitingForSelectionNotification = createWaitingForSelectionNotif();
 
+	// Those 2 popups shouldn't get shown at the same time
+	// Unless the user puts their keybind to F10
 	if (Mod::get()->getSavedValue<bool>("first-time-loading", true)) { // if their are going into the editor for the first time after installing this then show a popup
 		Mod::get()->setSavedValue<bool>("first-time-loading", false);
 
@@ -164,11 +172,32 @@ bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 				);
 			}
 		} else {
-			alert = FLAlertLayer::create("Hello!", "To generate color triggers please go to the 'edit' tab.", "Dismiss");
+			alert = FLAlertLayer::create("Hello !", "To generate color triggers please go to the 'edit' tab.", "Dismiss");
 		}
 
 		alert->m_scene = this;
 		alert->show();
+	}
+
+	if (
+		bindAsString("genColorTriggers"_spr) == keybindAsString(enumKeyCodes::KEY_F10)
+		&& !Mod::get()->getSavedValue<bool>("shown-keybind-incompability-popup", false)
+		&& Loader::get()->isModInstalled(CUSTOM_KEYBINDS_MOD_ID)
+	) {
+		Mod::get()->setSavedValue<bool>("shown-keybind-incompability-popup", true);
+
+		std::string content = fmt::format(
+			"The '**gen color trigger**' mod detected that the keybind for this mod was set to `{}`. However it **got changed in v1.1.2** to `{}`.\n"
+			"If you used the mod's description to find out what keybind this mod's used and it didn't work it's because you are still using the old keybind.\n\n"
+			"*(It got changed because the macos keybind for [devtools](https://geode-sdk.org/mods/geode.devtools) is `{}`)*",
+
+			keybindAsString(enumKeyCodes::KEY_F10),
+			keybindAsString(enumKeyCodes::KEY_F9),
+			keybindAsString(enumKeyCodes::KEY_F10)
+		);
+		MDPopup* popup = MDPopup::create("Possible keybind incompatibility found", content, "dismiss");
+		popup->m_scene = this;
+		popup->show();
 	}
 
 	#ifdef CAN_USE_CUSTOM_KEYBINDS
