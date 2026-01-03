@@ -139,8 +139,7 @@ std::optional<std::vector<modUtils::ColorTriggerContent>> colorChannelsParser::g
         std::string colorChannelsProperties = colorChannels[LVL_COLOR_CHANNELS];
 
         int i = 0;
-        for (auto &&rawColorChannel : geode::utils::string::split(colorChannelsProperties, "|"))
-        {
+        for (auto &&rawColorChannel : geode::utils::string::split(colorChannelsProperties, "|")) {
             auto colorTrigger = rawColorChannelToColorTrigger(rawColorChannel);
             if (colorTrigger) {
                 out.push_back(colorTrigger.value());
