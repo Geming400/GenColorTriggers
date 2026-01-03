@@ -3,20 +3,26 @@
 
 using namespace geode::prelude;
 
-#ifndef CAN_USE_CUSTOM_KEYBINDS
+/**
+ * Extra check if the user uninstalled CK but
+ * the 'show-editor-button' setting was disabled
+ */
+void doExtraCKCheck() {
+    if (!Loader::get()->isModLoaded(CUSTOM_KEYBINDS_MOD_ID)) {
+        Mod::get()->setSavedValue<bool>("show-editor-button", true);
+    }
+}
+
+
+#ifndef GEODE_IS_DESKTOP
 $on_mod(Loaded) {
     Mod::get()->setSavedValue<bool>("show-editor-button", true);
 }
 #endif
 
-#ifdef CAN_USE_CUSTOM_KEYBINDS
+#ifdef GEODE_IS_DESKTOP
 $on_mod(Loaded) {
-    // Extra check if the user uninstalled CK but
-    // the 'show-editor-button' setting was disabled
-    if (!Loader::get()->isModLoaded(CUSTOM_KEYBINDS_MOD_ID)) {
-        Mod::get()->setSavedValue<bool>("show-editor-button", true);
-    }
-
+    doExtraCKCheck();
 
     if (Mod::get()->getSavedValue<bool>("first-time-loading", true)) {
         Mod::get()->setSavedValue<bool>("show-editor-button", false);
