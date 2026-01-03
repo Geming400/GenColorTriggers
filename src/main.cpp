@@ -1,3 +1,5 @@
+// For context, I didn't know that there was an overload for Mod::getSettingValue<T>() that allowed for a default value
+
 #include <Geode/Geode.hpp>
 #include "./utils/utils.hpp"
 
