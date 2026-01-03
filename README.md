@@ -17,3 +17,4 @@ be accessible on mobile, which **I do not want**.
 - [ ] add a `Copy in clipboard` button ??
 - [ ] use the `getColorActions` member instead of a parser
 - [x] Optional CK dependency
+- [ ] Inform about old keybind (cough cough sdslayer)
