@@ -1,6 +1,6 @@
 # v1.1.8
 
-- Renamed the `GD Grid thingy` option to `Haiii :3` for clarity
+- Renamed the `Use GD's grid space` option to `Small steps` for clarity
 - Ported to 2.2081
 
 # v1.1.7
