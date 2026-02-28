@@ -1,6 +1,5 @@
 #include "colorTriggerGeneratorUI.hpp"
 
-#include "../hooks/LevelEditorLayer.hpp"
 #include <Geode/ui/GeodeUI.hpp>
 
 float constexpr borderUiSize = 3.5f;
@@ -16,7 +15,10 @@ const std::string generateForSelectedObjectsInfoButton_description = fmt::format
     "And it'll generate color triggers for your selection of objects !"
 );
 
-bool ColorTriggerGenUI::setup(GeneratorOptions value, std::function<void(const GeneratorOptions)> callback) {
+bool ColorTriggerGenUI::init(const GeneratorOptions& value, std::function<void(const GeneratorOptions)> callback) {
+    if (!Popup::init(500.0f, 240.0f))
+        return false;
+
     this->setTitle("Color trigger generator options");
     this->setID(POPUP_ID);
 
@@ -32,7 +34,7 @@ bool ColorTriggerGenUI::setup(GeneratorOptions value, std::function<void(const G
 
 ColorTriggerGenUI* ColorTriggerGenUI::create(GeneratorOptions options, std::function<void(const GeneratorOptions)> callback) {
     auto ret = new ColorTriggerGenUI();
-    if (ret->initAnchored(500.0f, 240.0f, options, callback)) {
+    if (ret->init(options, callback)) {
         ret->autorelease();
         return ret;
     }
@@ -62,9 +64,9 @@ void ColorTriggerGenUI::createLeftSide() {
 
     // m_useGdGridSpaceText
 
-    m_useGdGridSpaceText = CCLabelBMFont::create("Use GD's grid space", "bigFont.fnt");
-    m_useGdGridSpaceText->setPosition({ 110, 150 });
-    m_useGdGridSpaceText->setScale(checkboxTextSize);
+    m_useGdGridSpaceText = CCLabelBMFont::create("Small steps", "bigFont.fnt");
+    m_useGdGridSpaceText->setPosition({ 105, 150 });
+    m_useGdGridSpaceText->setScale(0.6);
     m_useGdGridSpaceText->setID("use-gd-grid-space-text");
     m_mainLayer->addChild(m_useGdGridSpaceText);
 
@@ -72,7 +74,7 @@ void ColorTriggerGenUI::createLeftSide() {
 
     m_useGdGridSpaceInfoButton = createInfoButtonFromSetting("use-gd-grid-space");
     m_useGdGridSpaceInfoButton->setID("use-gd-grid-space-info-button");
-    m_useGdGridSpaceInfoButton->setPosition({ 185, 155 });
+    m_useGdGridSpaceInfoButton->setPosition({ 175, 155 });
     m_buttonMenu->addChild(m_useGdGridSpaceInfoButton);
 
 

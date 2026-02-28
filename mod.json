@@ -1,18 +1,22 @@
 {
-	"geode": "4.10.0",
+	"geode": "5.0.1",
 	"gd": {
-		"win": "2.2074",
-		"mac": "2.2074",
-		"android": "2.2074",
-		"ios": "2.2074"
+		"win": "2.2081",
+		"mac": "2.2081",
+		"android": "2.2081",
+		"ios": "2.2081"
 	},
 	"id": "geming400.gen-color-triggers",
 	"name": "Gen color triggers",
-	"version": "v1.1.7",
+	"version": "v1.1.8",
 	"developer": "Geming400",
 	"description": "Generate color triggers for each color channels",
 	"links": {
 		"source": "https://github.com/Geming400/GenColorTriggers"
+	},
+	"issues": {
+		"info": "Use the 'New issue' button to create an issue. (You need a github account). You can instead dm on discord (@Geming400)",
+		"url": "https://github.com/Geming400/GenColorTriggers/issues"
 	},
 	"tags": [
 		"offline",
@@ -31,6 +35,14 @@
 			"name": "General",
 			"type": "title"
 		},
+		"generate-color-triggers": {
+			"type": "keybind",
+			"name": "Generate color triggers",
+			"description": "Opens the GUI to generate the color triggers. If the show gui setting has been disabled, it will simply generate them instead",
+			"default": "U",
+			"migrate-from": "geming400.gen-color-triggers/genColorTriggers",
+			"category": "editor"
+		},
 		"show-ui": {
 			"name": "Show UI",
 			"type": "bool",
@@ -41,7 +53,7 @@
 			"name": "Include built-in color channels",
 			"type": "bool",
 			"default": true,
-			"description": "Will the color channels for the BG, G, MG, etc... will be included in the generated triggers as well"
+			"description": "Will color channels such as `BG`, `G`, `MG`, etc... get included in the generated output as well"
 		},
 		"show-editor-button": {
 			"name": "Show editor button",
@@ -62,10 +74,10 @@
 			"type": "title"
 		},
 		"use-gd-grid-space": {
-			"name": "Use GD grid space",
+			"name": "Small steps",
 			"type": "bool",
-			"default": true,
-			"description": "If enabled, it will center the given coordinate on the grid. If disabled: 1 grid unit = 30 X/Y"
+			"default": false,
+			"description": "If disabled, it will center the given coordinate on the grid. If enabled: 1 grid unit = 30 X/Y. This is the same as in the move trigger"
 		},
 		"offset-x": {
 			"name": "X offset",
@@ -102,12 +114,5 @@
 				"big-arrow-step": 5
 			}
 		}
-	},
-    "dependencies": {
-        "geode.custom-keybinds": {
-            "version": "v1.11.0",
-            "importance": "recommended",
-			"platforms": ["win", "mac"]
-        }
 	}
 }

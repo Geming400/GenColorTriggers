@@ -4,13 +4,7 @@
 #include "LevelEditorLayer.hpp"
 #include "../utils/utils.hpp"
 
-#ifdef CAN_USE_CUSTOM_KEYBINDS
-
-#include <geode.custom-keybinds/include/OptionalAPI.hpp>
-using namespace keybinds;
-
-#endif
-
+// TODO: Remake
 std::string bindAsString(std::string bindID, size_t defaultIndex = 0) {
 	#ifdef CAN_USE_CUSTOM_KEYBINDS
 
@@ -83,18 +77,6 @@ void MyEditorUI::generateColorTriggers(const GeneratorOptions options) {
 }
 
 void MyEditorUI::onGenerateColorTriggers(CCObject*) {
-	if (!m_editorLayer) { // Really NEVER should happen btw
-		log::error("The editor layer wasn't found ??");
-		Notification::create("The editor layer wasn't found ??", NotificationIcon::Error)->show();
-
-		return;
-	}
-
-	/*
-	log::info("m_isPaused = {}", m_isPaused);
-	if (m_isPaused) return;
-	*/
-
 	auto selectedObjects = CCArrayExt<GameObject>(this->getSelectedObjects());
 
 	if (m_fields->m_genOptions) {
@@ -115,8 +97,8 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 	if (selectedObjects.size() == 1) {
 		// If the popup is already opened, don't open it again
 		if (
-			m_editorLayer->getParent()->getChildByID(ColorTriggerGenUI::POPUP_ID) ||
-			m_editorLayer->getParent()->getChildByID("waiting-for-selection-notification"_spr)
+			m_editorLayer->getParent()->getChildByID(ColorTriggerGenUI::POPUP_ID)
+			|| m_editorLayer->getParent()->getChildByID("waiting-for-selection-notification"_spr)
 		) { return; }
 
 		m_fields->m_centerBlock = selectedObjects[0];
@@ -128,7 +110,7 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 					this->deselectAll();
 
 					m_fields->m_waitingForSelectionNotification->stopAllActions();
-					m_fields->m_waitingForSelectionNotification->setTimeMember(0.f);
+					m_fields->m_waitingForSelectionNotification->setTime(0.f);
 					m_fields->m_waitingForSelectionNotification->setString(MyEditorUI::createWaitingForSelectionNotifText());
 					m_fields->m_waitingForSelectionNotification->setIcon(NotificationIcon::Info);
 					m_fields->m_waitingForSelectionNotification->show(Alignement(MIDDLE, TOP));
@@ -161,20 +143,15 @@ bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 
 		FLAlertLayer* alert;
 
-		if (Loader::get()->isModInstalled(CUSTOM_KEYBINDS_MOD_ID)) {
-			if (Mod::get()->getSavedValue<bool>("show-editor-button")) {
-				alert = FLAlertLayer::create("Hello!", "To generate color triggers please go to the 'edit' tab.", "Dismiss");
-			} else {
-				alert = FLAlertLayer::create(
-					"Hello!",
-					fmt::format("To generate color triggers please press '{}'.", bindAsString("genColorTriggers"_spr)),
-					"Dismiss"
-				);
-			}
+		if (Mod::get()->getSavedValue<bool>("show-editor-button")) {
+			alert = FLAlertLayer::create("Hello!", "To generate color triggers please go to the 'edit' tab.", "Dismiss");
 		} else {
-			alert = FLAlertLayer::create("Hello !", "To generate color triggers please go to the 'edit' tab.", "Dismiss");
+			alert = FLAlertLayer::create(
+				"Hello!",
+				fmt::format("To generate color triggers please press '{}'.", bindAsString("genColorTriggers"_spr)),
+				"Dismiss"
+			);
 		}
-
 		alert->m_scene = this;
 		alert->show();
 	}
@@ -182,7 +159,6 @@ bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 	if (
 		bindAsString("genColorTriggers"_spr) == keybindAsString(enumKeyCodes::KEY_F10)
 		&& !Mod::get()->getSavedValue<bool>("shown-keybind-incompability-popup", false)
-		&& Loader::get()->isModInstalled(CUSTOM_KEYBINDS_MOD_ID)
 	) {
 		Mod::get()->setSavedValue<bool>("shown-keybind-incompability-popup", true);
 
@@ -200,28 +176,16 @@ bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 		popup->show();
 	}
 
-	#ifdef CAN_USE_CUSTOM_KEYBINDS
-
-	if (Loader::get()->isModInstalled(CUSTOM_KEYBINDS_MOD_ID)) {
-		this->addEventListener<InvokeBindFilterV2>([this](InvokeBindEventV2* event) {
-			if (event->isDown()) {
+	this->addEventListener(
+		KeybindSettingPressedEventV3(Mod::get(), "generate-color-triggers"),
+		[this](Keybind const& keybind, bool down, bool repeat, double timestamp) {
+			if (down && !repeat) {
 				onGenerateColorTriggers(nullptr);
 			}
-			// Return Propagate if you want other actions with the same bind to
-			// also be fired, or Stop if you want to halt propagation
-			return ListenerResult::Propagate;
-		}, "genColorTriggers"_spr);
+		}
+	);
 
-		log::info("Registered keybind 'genColorTriggers' !");
-	} else {
-		log::info("User doesn't have the ck mod installer, cannot register a keybind.");
-	}
-
-	#else
-
-	log::info("User is on mobile, cannot register a keybind.");
-
-	#endif
+	log::info("Registered keybind 'genColorTriggers' !");
 
 	return true;
 }
@@ -229,7 +193,7 @@ bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 void MyEditorUI::createMoveMenu() {
 	EditorUI::createMoveMenu();
 
-	if (Mod::get()->getSavedValue<bool>("show-editor-button")) {
+	if (Mod::get()->getSavedValue<bool>("show-editor-button") || Mod::get()->getSettingValue<std::vector<geode::Keybind>>("generate-color-triggers").empty()) {
 		auto btn = this->getSpriteButton("genColorTriggers.png"_spr, menu_selector(MyEditorUI::onGenerateColorTriggers), nullptr, 0.9f);
 		m_editButtonBar->m_buttonArray->addObject(btn);
 
@@ -246,6 +210,7 @@ PositionableNotification* MyEditorUI::createWaitingForSelectionNotif() {
 		0
 	);
 
+
 	notif->setID("waiting-for-selection-notification"_spr);
 	notif->retain();
 
@@ -255,14 +220,10 @@ PositionableNotification* MyEditorUI::createWaitingForSelectionNotif() {
 std::string MyEditorUI::createWaitingForSelectionNotifText() {
 	std::string ret;
 
-	if (Loader::get()->isModInstalled(CUSTOM_KEYBINDS_MOD_ID)) {
-		if (Mod::get()->getSavedValue<bool>("show-editor-button")) {
-			ret = "Please select objects and then press the editor button again";
-		} else {
-			ret = fmt::format("Please select objects and then press '{}' again", bindAsString("genColorTriggers"_spr));
-		}
-	} else {
+	if (Mod::get()->getSavedValue<bool>("show-editor-button")) {
 		ret = "Please select objects and then press the editor button again";
+	} else {
+		ret = fmt::format("Please select objects and then press '{}' again", bindAsString("genColorTriggers"_spr));
 	}
 
 	return ret;

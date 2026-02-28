@@ -8,7 +8,7 @@
 using namespace geode::prelude;
 
 
-class ColorTriggerGenUI : public geode::Popup<GeneratorOptions, std::function<void(const GeneratorOptions)>> {
+class ColorTriggerGenUI : public Popup {
     GeneratorOptions m_options;
     std::function<void(const GeneratorOptions)> m_callback;
 
@@ -57,7 +57,7 @@ class ColorTriggerGenUI : public geode::Popup<GeneratorOptions, std::function<vo
     CCLayerColor* createSeparator(CCPoint pos, float width = 150.0f, float height = 2.0f);
 
 protected:
-    bool setup(GeneratorOptions options, std::function<void(const GeneratorOptions)>) override;
+    bool init(const GeneratorOptions& options, std::function<void(const GeneratorOptions)>);
 
 public:
     static ColorTriggerGenUI* create(

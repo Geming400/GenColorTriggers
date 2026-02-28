@@ -10,20 +10,14 @@ using namespace geode::prelude;
  * the 'show-editor-button' setting was disabled
  */
 void doExtraCKCheck() {
-    if (!Loader::get()->isModLoaded(CUSTOM_KEYBINDS_MOD_ID)) {
-        Mod::get()->setSavedValue<bool>("show-editor-button", true);
-    }
-}
-
-
-#ifndef GEODE_IS_DESKTOP
-$on_mod(Loaded) {
+    #ifdef HAS_EDITOR_BUTTON
     Mod::get()->setSavedValue<bool>("show-editor-button", true);
+    #endif
 }
-#endif
 
-#ifdef GEODE_IS_DESKTOP
 $on_mod(Loaded) {
+    #ifdef GEODE_IS_DESKTOP
+
     doExtraCKCheck();
 
     if (Mod::get()->getSavedValue<bool>("first-time-loading", true)) {
@@ -37,5 +31,18 @@ $on_mod(Loaded) {
         Mod::get()->setSavedValue<bool>("show-editor-button", newValue);
         Mod::get()->setSettingValue<bool>("show-editor-button", newValue);
     }
+
+    #else
+
+    Mod::get()->setSavedValue<bool>("show-editor-button", true);
+
+    #endif
+
+
+    if (Mod::get()->getSavedValue<bool>("first-time-loading-v1.1.8", true)) {
+        log::info("Detected that user launched gen color triggers v1.1.8 for the first time. Inverting 'use-gd-grid-space' setting (renamed to 'Small Steps' for clarity)");
+        Mod::get()->setSavedValue<bool>("show-editor-button-v1.1.8", false);
+
+        Mod::get()->setSettingValue("use-gd-grid-space", !Mod::get()->getSettingValue<bool>("use-gd-grid-space"));
+    }
 }
-#endif

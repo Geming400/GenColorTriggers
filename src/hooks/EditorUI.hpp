@@ -1,12 +1,11 @@
 #pragma once
 
-class PositionableNotification; // I am going to kill msvc
 class ColorTriggerGenUI; // I am fucking going to kill myself because of those stupid building errors
 
 #include <Geode/Geode.hpp>
-#include "../utils/PositionableNotification.hpp"
 #include "../ui/generatorOptions.hpp"
 #include "../ui/colorTriggerGeneratorUI.hpp"
+#include "../ui/PositionableNotification.hpp"
 
 using namespace geode::prelude;
 
@@ -20,7 +19,6 @@ class $modify(MyEditorUI, EditorUI) {
         ColorTriggerGenUI* m_genUI;
     };
 
-    void onGenerateColorTriggers_old(CCObject*);
     void onGenerateColorTriggers(CCObject*);
     void generateColorTriggers(const GeneratorOptions options);
 

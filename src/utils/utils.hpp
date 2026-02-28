@@ -4,12 +4,9 @@
 
 using namespace geode::prelude;
 
-
-#if defined(GEODE_IS_DESKTOP)
-#define CAN_USE_CUSTOM_KEYBINDS
+#ifdef GEODE_IS_DESKTOP
+#define HAS_EDITOR_BUTTON
 #endif
-
-#define CUSTOM_KEYBINDS_MOD_ID "geode.custom-keybinds"
 
 namespace modUtils {
     struct ColorTriggerContent {

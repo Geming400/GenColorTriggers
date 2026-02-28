@@ -1,3 +1,8 @@
+# v1.1.8
+
+- Renamed the `GD Grid thingy` option to `Haiii :3` for clarity
+- Ported to 2.2081
+
 # v1.1.7
 
 - Added a popup informing about the user still using the old keybind
