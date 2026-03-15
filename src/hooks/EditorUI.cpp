@@ -51,10 +51,12 @@ void MyEditorUI::generateColorTriggers(const GeneratorOptions options) {
 
 	CCPoint offset = centerBlock->getPosition();
 
-	double offset_x = options.m_offsetX;
-	double offset_y = options.m_offsetY;
+	double offset_x = options.offsetX;
+	double offset_y = options.offsetY;
 
-	if (!options.m_useGdGridSpace) {
+	// idk man
+	// it works and that's enough
+	if (!options.smallSteps) {
 		offset_x = modUtils::coordinateToGDgridPos(offset_x, false);
 		offset_y = modUtils::coordinateToGDgridPos(offset_y, false);
 	}
@@ -63,10 +65,10 @@ void MyEditorUI::generateColorTriggers(const GeneratorOptions options) {
 	offset.y += offset_y;
 
 	size_t colorTriggersNum = static_cast<MyLevelEditorLayer*>(m_editorLayer)->genColorTriggers(centerBlock, offset, options);
-	if (colorTriggersNum == 0 && !options.m_genForSelectedObjects) { // Isn't supposed to happen since there are the bg colors, etc...
+	if (colorTriggersNum == 0 && !options.genForSelectedObjects) { // Isn't supposed to happen since there are the bg colors, etc...
 		log::warn("Generated 0 color triggers.");
 		Notification::create("Generated 0 color triggers !!! (This is NOT supposed to happen)", NotificationIcon::Warning)->show();
-	} else if (!options.m_genForSelectedObjects) {
+	} else if (!options.genForSelectedObjects) {
 		std::string colorTriggersNumStr = colorTriggersNum >= vectorSizePushLimit ? fmt::format("{}+", colorTriggersNum) : fmt::to_string(colorTriggersNum);
 		Notification::create(fmt::format("Sucessfully generated {} color triggers!", colorTriggersNumStr), NotificationIcon::Success)->show();
 	} else {
@@ -107,7 +109,7 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 
 		if (Mod::get()->getSettingValue<bool>("show-ui")) {
 			m_fields->m_genUI = ColorTriggerGenUI::create(GeneratorOptions::fromSettingValues(), [this](const GeneratorOptions options) {
-				if (options.m_genForSelectedObjects) {
+				if (options.genForSelectedObjects) {
 					m_fields->m_genOptions = options;
 					this->deselectAll();
 

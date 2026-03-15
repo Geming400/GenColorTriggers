@@ -52,30 +52,30 @@ void ColorTriggerGenUI::createLeftSide() {
     m_leftSideSeparator = createSeparator({ 25, 175 });
     m_mainLayer->addChild(m_leftSideSeparator);
 
-    // m_useGdGridSpaceCheckbox
+    // m_smallStepsCheckbox
 
-    m_useGdGridSpaceCheckbox = CCMenuItemExt::createTogglerWithStandardSprites(checkboxSize, [this](CCMenuItemToggler* obj) {
-        m_options.m_useGdGridSpace = !obj->isOn(); // idk, when it's toggled on, `obj->isOn()` returns false
+    m_smallStepsCheckbox = CCMenuItemExt::createTogglerWithStandardSprites(checkboxSize, [this](CCMenuItemToggler* obj) {
+        m_options.smallSteps = !obj->isOn(); // idk, when it's toggled on, `obj->isOn()` returns false
     });
-    m_useGdGridSpaceCheckbox->setPosition({ 20, 150 });
-    m_useGdGridSpaceCheckbox->toggle(m_options.m_useGdGridSpace);
-    m_useGdGridSpaceCheckbox->setID("use-gd-grid-space-checkbox");
-    m_buttonMenu->addChild(m_useGdGridSpaceCheckbox);
+    m_smallStepsCheckbox->setPosition({ 20, 150 });
+    m_smallStepsCheckbox->toggle(m_options.smallSteps);
+    m_smallStepsCheckbox->setID("use-gd-grid-space-checkbox");
+    m_buttonMenu->addChild(m_smallStepsCheckbox);
 
-    // m_useGdGridSpaceText
+    // m_smallStepsText
 
-    m_useGdGridSpaceText = CCLabelBMFont::create("Small steps", "bigFont.fnt");
-    m_useGdGridSpaceText->setPosition({ 105, 150 });
-    m_useGdGridSpaceText->setScale(0.6);
-    m_useGdGridSpaceText->setID("use-gd-grid-space-text");
-    m_mainLayer->addChild(m_useGdGridSpaceText);
+    m_smallStepsText = CCLabelBMFont::create("Small steps", "bigFont.fnt");
+    m_smallStepsText->setPosition({ 105, 150 });
+    m_smallStepsText->setScale(0.6);
+    m_smallStepsText->setID("use-gd-grid-space-text");
+    m_mainLayer->addChild(m_smallStepsText);
 
-    // m_useGdGridSpaceInfoButton
+    // m_smallStepsInfoButton
 
-    m_useGdGridSpaceInfoButton = createInfoButtonFromSetting("use-gd-grid-space");
-    m_useGdGridSpaceInfoButton->setID("use-gd-grid-space-info-button");
-    m_useGdGridSpaceInfoButton->setPosition({ 175, 155 });
-    m_buttonMenu->addChild(m_useGdGridSpaceInfoButton);
+    m_smallStepsInfoButton = createInfoButtonFromSetting("use-gd-grid-space");
+    m_smallStepsInfoButton->setID("use-gd-grid-space-info-button");
+    m_smallStepsInfoButton->setPosition({ 175, 155 });
+    m_buttonMenu->addChild(m_smallStepsInfoButton);
 
 
     // m_offsetXinput
@@ -86,7 +86,7 @@ void ColorTriggerGenUI::createLeftSide() {
     m_offsetXinput->setCallback([this](std::string string) {
         auto toFloat = utils::numFromString<float>(string);
         if (toFloat.isOk()) {
-            m_options.m_offsetX = *toFloat;
+            m_options.offsetX = *toFloat;
         }
         else log::warn("User entered a non-float like input: {}\nError: {}", string, toFloat.unwrapErr());
     });
@@ -106,7 +106,7 @@ void ColorTriggerGenUI::createLeftSide() {
     m_offsetYinput->setCallback([this](std::string string) {
         auto toFloat = utils::numFromString<float>(string);
         if (toFloat.isOk()) {
-            m_options.m_offsetY = *toFloat;
+            m_options.offsetY = *toFloat;
         }
         else log::warn("User entered a non-float like input: {}\nError: {}", string, toFloat.unwrapErr());
     });
@@ -155,10 +155,10 @@ void ColorTriggerGenUI::createRightSide() {
     // m_generateForSelectedObjectsCheckbox
 
     m_generateForSelectedObjectsCheckbox = CCMenuItemExt::createTogglerWithStandardSprites(checkboxSize, [this](CCMenuItemToggler* obj) {
-        m_options.m_genForSelectedObjects = !obj->isOn();
+        m_options.genForSelectedObjects = !obj->isOn();
     });
     m_generateForSelectedObjectsCheckbox->setPosition({ 335, 150 });
-    m_generateForSelectedObjectsCheckbox->toggle(m_options.m_genForSelectedObjects);
+    m_generateForSelectedObjectsCheckbox->toggle(m_options.genForSelectedObjects);
     m_generateForSelectedObjectsCheckbox->setID("generate-for-selected-objects-checkbox");
     m_buttonMenu->addChild(m_generateForSelectedObjectsCheckbox);
 
@@ -183,10 +183,10 @@ void ColorTriggerGenUI::createRightSide() {
     // m_parseBuiltinColorChannelsCheckbox
 
     m_parseBuiltinColorChannelsCheckbox = CCMenuItemExt::createTogglerWithStandardSprites(checkboxSize, [this](CCMenuItemToggler* obj) {
-        m_options.m_parseBuiltinColorChannels = !obj->isOn();
+        m_options.parseBuiltinColorChannels = !obj->isOn();
     });
     m_parseBuiltinColorChannelsCheckbox->setPosition({ 335, 110 });
-    m_parseBuiltinColorChannelsCheckbox->toggle(m_options.m_parseBuiltinColorChannels);
+    m_parseBuiltinColorChannelsCheckbox->toggle(m_options.parseBuiltinColorChannels);
     m_parseBuiltinColorChannelsCheckbox->setID("parse-builtin-color-channels-checkbox");
     m_buttonMenu->addChild(m_parseBuiltinColorChannelsCheckbox);
 

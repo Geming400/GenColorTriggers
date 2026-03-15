@@ -17,9 +17,9 @@ class ColorTriggerGenUI : public Popup {
     Ref<CCLabelBMFont> m_generatorSectionLabel;
     Ref<CCLayerColor> m_leftSideSeparator;
 
-    Ref<CCMenuItemToggler> m_useGdGridSpaceCheckbox;
-    Ref<CCLabelBMFont> m_useGdGridSpaceText;
-    Ref<CCMenuItemSpriteExtra> m_useGdGridSpaceInfoButton;
+    Ref<CCMenuItemToggler> m_smallStepsCheckbox;
+    Ref<CCLabelBMFont> m_smallStepsText;
+    Ref<CCMenuItemSpriteExtra> m_smallStepsInfoButton;
 
     // Float text inputs
     Ref<TextInput> m_offsetXinput;

@@ -48,7 +48,7 @@ std::vector<modUtils::ColorTriggerContent> MyLevelEditorLayer::getGeneratableCol
 	// 1
 	std::vector<modUtils::ColorTriggerContent> generatableColorChannels;
 	for (const auto &colorTriggerContent : colorChannels) {
-		if (options.m_parseBuiltinColorChannels) {
+		if (options.parseBuiltinColorChannels) {
 			if (!modUtils::isInVector(allowedCustomColors, colorTriggerContent.targetChannelID) && colorTriggerContent.targetChannelID >= 1000) { continue; }
 		} else {
 			if (colorTriggerContent.targetChannelID >= 1000) { continue; }
@@ -64,7 +64,7 @@ std::vector<modUtils::ColorTriggerContent> MyLevelEditorLayer::getGeneratableCol
 	auto selectedObjects = CCArrayExt<GameObject>(m_editorUI->getSelectedObjects());
 
 	for (const auto& obj : selectedObjects) {
-		if (options.m_genForSelectedObjects) {
+		if (options.genForSelectedObjects) {
 			std::optional<int> baseColorID; // Normally there always should be a base color, but just in case
 			std::optional<int> detailColorID;
 
@@ -79,7 +79,7 @@ std::vector<modUtils::ColorTriggerContent> MyLevelEditorLayer::getGeneratableCol
 		}
 	}
 
-	if (options.m_genForSelectedObjects) {
+	if (options.genForSelectedObjects) {
 		std::vector<modUtils::ColorTriggerContent> newGeneratableColorChannels;
 
 		for (size_t i = 0; i < generatableColorChannels.size(); i++) {

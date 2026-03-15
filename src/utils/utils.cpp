@@ -1,9 +1,9 @@
 #include "utils.hpp"
 
 double modUtils::coordinateToGDgridPos(double coord, bool onGrid, float scaleMod) {
-    if (onGrid) {
+    if (onGrid)
         return (15 + coord*30) * scaleMod;
-    }
+
     return coord*30 * scaleMod;
 }
 
