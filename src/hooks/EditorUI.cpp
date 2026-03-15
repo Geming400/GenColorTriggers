@@ -1,6 +1,7 @@
 #include "EditorUI.hpp"
 
 #include "Geode/loader/Log.hpp"
+#include "Geode/ui/GeodeUI.hpp"
 #include "LevelEditorLayer.hpp"
 #include "../utils/utils.hpp"
 
@@ -53,7 +54,7 @@ void MyEditorUI::generateColorTriggers(const GeneratorOptions options) {
 	double offset_x = options.m_offsetX;
 	double offset_y = options.m_offsetY;
 
-	if (options.m_useGdGridSpace) {
+	if (!options.m_useGdGridSpace) {
 		offset_x = modUtils::coordinateToGDgridPos(offset_x, false);
 		offset_y = modUtils::coordinateToGDgridPos(offset_y, false);
 	}
@@ -83,6 +84,7 @@ void MyEditorUI::onGenerateColorTriggers(CCObject*) {
 		m_fields->m_waitingForSelectionNotification->waitAndHide();
 		if (selectedObjects.size() == 0) {
 			m_fields->m_waitingForSelectionNotification->setString("Sucessfully cancelled !");
+			m_fields->m_waitingForSelectionNotification->setScale(.75f);
 			m_fields->m_waitingForSelectionNotification->setIcon(NotificationIcon::Success);
 
 			m_fields->m_genOptions = std::nullopt;
@@ -156,25 +158,65 @@ bool MyEditorUI::init(LevelEditorLayer* editorLayer) {
 		alert->show();
 	}
 
+	// if (
+	// 	bindAsString("genColorTriggers"_spr) == keybindAsString(enumKeyCodes::KEY_F10)
+	// 	&& !Mod::get()->getSavedValue<bool>("shown-keybind-incompability-popup", false)
+	// ) {
+	// 	Mod::get()->setSavedValue<bool>("shown-keybind-incompability-popup", true);
+
+	// 	std::string content = fmt::format(
+	// 		"The '**gen color trigger**' mod detected that the keybind for this mod was set to `{}`. However it **got changed in v1.1.2** to `{}`.\n"
+	// 		"If you used the mod's description to find out what keybind this mod's used and it didn't work it's because you are still using the old keybind.\n\n"
+	// 		"*(It got changed because the macos keybind for [devtools](https://geode-sdk.org/mods/geode.devtools) is `{}`)*",
+
+	// 		keybindAsString(enumKeyCodes::KEY_F10),
+	// 		keybindAsString(enumKeyCodes::KEY_F9),
+	// 		keybindAsString(enumKeyCodes::KEY_F10)
+	// 	);
+	// 	MDPopup* popup = MDPopup::create("Possible keybind incompatibility found", content, "dismiss");
+	// 	popup->m_scene = this;
+	// 	popup->show();
+	// }
+
+	auto keybinds = Mod::get()->getSettingValue<std::vector<Keybind>>("generate-color-triggers");
+
+	// The keybind was only available on desktops
+	#ifdef GEODE_IS_DESKTOP
 	if (
-		bindAsString("genColorTriggers"_spr) == keybindAsString(enumKeyCodes::KEY_F10)
-		&& !Mod::get()->getSavedValue<bool>("shown-keybind-incompability-popup", false)
+		!Mod::get()->getSavedValue<bool>("shown-new-keybinds-popup", false)
+		&& keybinds.size() == 1 && keybinds[0].key == enumKeyCodes::KEY_F9 // F9 is the old keybind
 	) {
-		Mod::get()->setSavedValue<bool>("shown-keybind-incompability-popup", true);
+		Mod::get()->setSavedValue<bool>("shown-new-keybinds-popup", true);
 
+		// TODO: make it open the settings
 		std::string content = fmt::format(
-			"The '**gen color trigger**' mod detected that the keybind for this mod was set to `{}`. However it **got changed in v1.1.2** to `{}`.\n"
-			"If you used the mod's description to find out what keybind this mod's used and it didn't work it's because you are still using the old keybind.\n\n"
-			"*(It got changed because the macos keybind for [devtools](https://geode-sdk.org/mods/geode.devtools) is `{}`)*",
-
-			keybindAsString(enumKeyCodes::KEY_F10),
-			keybindAsString(enumKeyCodes::KEY_F9),
-			keybindAsString(enumKeyCodes::KEY_F10)
+			"The keybind to open the gen color trigger's ui has changed. It has now been set to `U`. Robtop is now using the F9 key for the tracing system.\n\n"
+			"**To prevent any conflicts, you should change the mod's keybind**. You can always change it in this mod's settings"
 		);
-		MDPopup* popup = MDPopup::create("Possible keybind incompatibility found", content, "dismiss");
+
+		// auto newKeybind = Keybind::fromString("u");
+		// if (newKeybind.isOk()) {
+		// 	// TODO: doesn't really work. See how geode handles it internally
+		// 	Mod::get()->setSavedValue<std::vector<Keybind>>("generate-color-triggers", { newKeybind.unwrap() });
+
+		// 	SettingNodeValueChangeEventV3(
+		// 		Mod::get(),
+		// 		"generate-color-triggers"
+		// 	).send(nullptr, false);
+		// 	log::info("Set keybind for setting 'shown-new-keybinds-popup' to U");
+		// } else {
+		// 	log::error("Failed to create keybind 'U': {}", newKeybind.err());
+		// }
+
+
+		MDPopup* popup = MDPopup::create("Keybind incompatiblity warning", content, "Dismiss", "Open Settings", [](bool btn2) {
+			if (btn2)
+				openSettingsPopup(Mod::get());
+		});
 		popup->m_scene = this;
 		popup->show();
 	}
+	#endif
 
 	this->addEventListener(
 		KeybindSettingPressedEventV3(Mod::get(), "generate-color-triggers"),
@@ -211,6 +253,7 @@ PositionableNotification* MyEditorUI::createWaitingForSelectionNotif() {
 	);
 
 
+	notif->setScale(0.6f);
 	notif->setID("waiting-for-selection-notification"_spr);
 	notif->retain();
 
@@ -223,7 +266,7 @@ std::string MyEditorUI::createWaitingForSelectionNotifText() {
 	if (Mod::get()->getSavedValue<bool>("show-editor-button")) {
 		ret = "Please select objects and then press the editor button again";
 	} else {
-		ret = fmt::format("Please select objects and then press '{}' again", bindAsString("genColorTriggers"_spr));
+		ret = fmt::format("Please select objects and open the gen colors trigger gui");
 	}
 
 	return ret;

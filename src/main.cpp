@@ -41,7 +41,7 @@ $on_mod(Loaded) {
 
     if (Mod::get()->getSavedValue<bool>("first-time-loading-v1.1.8", true)) {
         log::info("Detected that user launched gen color triggers v1.1.8 for the first time. Inverting 'use-gd-grid-space' setting (renamed to 'Small Steps' for clarity)");
-        Mod::get()->setSavedValue<bool>("show-editor-button-v1.1.8", false);
+        Mod::get()->setSavedValue<bool>("first-time-loading-v1.1.8", false);
 
         Mod::get()->setSettingValue("use-gd-grid-space", !Mod::get()->getSettingValue<bool>("use-gd-grid-space"));
     }

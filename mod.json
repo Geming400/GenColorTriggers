@@ -77,7 +77,7 @@
 			"name": "Small steps",
 			"type": "bool",
 			"default": false,
-			"description": "If disabled, it will center the given coordinate on the grid. If enabled: 1 grid unit = 30 X/Y. This is the same as in the move trigger"
+			"description": "If disabled, it will center the given coordinate on the grid. If enabled: 1 grid unit = 30 X/Y. The 'Small Steps' option in the move trigger is very similar"
 		},
 		"offset-x": {
 			"name": "X offset",
